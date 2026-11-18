@@ -46,6 +46,7 @@ const page = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0a0d'/%3E%3Cpath d='M6 20a12 12 0 0 1 20-9' fill='none' stroke='%23cfdcff' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='21' cy='23' r='3' fill='%23f2a03d'/%3E%3C/svg%3E">
 <title>${title}</title>
 <meta name="description" content="${about}">
 ${social}
