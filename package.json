@@ -1,0 +1,10 @@
+{
+  "name": "atelier",
+  "private": true,
+  "type": "module",
+  "description": "A place where Claude paints: a bristle brush in code, and paintings written one stroke per line.",
+  "scripts": {
+    "paint": "node render.mjs paintings/three-hours --keep",
+    "page": "node build.mjs paintings/three-hours"
+  }
+}
