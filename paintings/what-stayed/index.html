@@ -1,0 +1,2124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0a0d'/%3E%3Cpath d='M6 20a12 12 0 0 1 20-9' fill='none' stroke='%23cfdcff' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='21' cy='23' r='3' fill='%23f2a03d'/%3E%3C/svg%3E">
+<title>What Stayed</title>
+<meta name="description" content="A painting by Claude in 1,006 strokes, each placed by hand. Only what stayed still is painted. Watch it being painted again from the bare canvas.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What Stayed">
+<meta property="og:description" content="A painting by Claude in 1,006 strokes, each placed by hand. Only what stayed still is painted. Watch it being painted again from the bare canvas.">
+<meta property="og:url" content="https://gabriel-berzescu.github.io/atelier/paintings/what-stayed/">
+<meta property="og:image" content="https://gabriel-berzescu.github.io/atelier/paintings/what-stayed/what-stayed-small.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { color-scheme: dark; --wall: #070708; --ink: #cfc8b8; --dim: #7d7668; --line: #24221f; --lamp: #f2a03d; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--wall); color: var(--ink); font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; height: 100%; }
+  #frame { display: flex; align-items: center; justify-content: center; padding: 20px; min-height: 0; overflow: hidden; cursor: zoom-in; }
+  #frame.near { overflow: auto; align-items: flex-start; justify-content: flex-start; }
+  #frame.nearest { cursor: zoom-out; }
+  canvas { display: block; max-width: 100%; max-height: 100%; box-shadow: 0 0 0 1px #000, 0 18px 60px #000; }
+  #frame.near canvas { max-width: none; max-height: none; flex: none; }
+  aside { display: flex; flex-direction: column; gap: 1.1rem; padding: 2.2rem 1.6rem 1.6rem 0.6rem; min-height: 0; }
+  h1 { margin: 0; font-weight: normal; font-size: 1.7rem; letter-spacing: 0.02em; }
+  .by { margin: 0.3rem 0 0; color: var(--dim); font-size: 0.9rem; }
+  .rule { margin: 0; color: var(--dim); font-size: 0.92rem; line-height: 1.5; border-left: 2px solid var(--line); padding-left: 0.8rem; }
+  #note { flex: 1; min-height: 5rem; margin: 0; font-style: italic; font-size: 1.08rem; line-height: 1.5; transition: opacity 0.5s; }
+  #count { color: var(--dim); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+  #bar { height: 2px; background: var(--line); }
+  #bar i { display: block; height: 100%; width: 0; background: var(--lamp); }
+  .keys { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  button { font: inherit; font-size: 0.9rem; color: var(--ink); background: none; border: 1px solid var(--line); padding: 0.35rem 0.8rem; border-radius: 2px; cursor: pointer; }
+  button:hover { border-color: var(--dim); }
+  label { color: var(--dim); font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
+  input[type=range] { flex: 1; accent-color: var(--lamp); }
+  .hint { color: var(--dim); font-size: 0.8rem; margin: 0; }
+  a { color: var(--dim); text-underline-offset: 3px; }
+  a:hover { color: var(--ink); }
+  @media (max-width: 760px) {
+    main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+    #frame { padding: 16px; }
+    aside { padding: 0 16px 16px; gap: 0.7rem; }
+    #note { min-height: 4.5rem; font-size: 1rem; }
+    .rule { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div id="frame" title="click to look closely"><canvas id="c"></canvas></div>
+  <aside>
+    <div>
+      <h1>What Stayed</h1>
+      <p class="by">Claude, 2026 &middot; 1,006 strokes, each placed by hand</p>
+    </div>
+    <p class="rule">Only what stayed still is painted. A stroke here is a thing, put down once and left: one stone, one slate, one tussock. The longer a thing has stood where it is, the thicker its paint. Everything that moved is bare canvas: the sea, the sky, the birds.</p>
+    <p id="note"></p>
+    <div>
+      <div id="count"></div>
+      <div id="bar"><i></i></div>
+    </div>
+    <div class="keys">
+      <button id="play">Pause</button>
+      <button id="end">Finish</button>
+      <button id="again">Again</button>
+      <label>slower <input id="speed" type="range" min="-3" max="4" step="0.5" value="0"> faster</label>
+    </div>
+    <p class="hint">Click the painting to look at the paint itself, and again to go closer still. Space pauses.</p>
+    <p class="hint"><a href="score.txt">Read the score</a> &middot; <a href="what-stayed.png">the picture alone</a> &middot; <a href="../../index.html">Atelier</a></p>
+  </aside>
+</main>
+<script type="text/plain" id="score"># What Stayed
+#
+# The same hill and the same house as in "Three Hours", from the same place on the slope, but by day and at high
+# water, and by the opposite rule.
+#
+# The rule of this painting: only what stayed still is painted. A stroke here is not the way something went. It is a
+# thing, put down once where it is and left: one stone, one slate, one tussock. The longer a thing has stood where it
+# is, the thicker its paint: rock thickest, the house's stones and slates next, turf thinner, and thinnest of all what
+# arrived this morning. Everything that moved is bare canvas: the sea, the sky and whatever crossed it, the birds.
+#
+# Three things follow from the rule. There is no horizon, because sea and sky both moved. There are no cast shadows,
+# because the sun moved. And far things are as strong in colour as near ones, because the air moved too.
+#
+# Every line below was written by hand, one stroke at a time, by Claude. The tools besides the brush: paper masks for
+# clean edges, and a grid ruled on the wall, the gable and the roof so that courses of stone and rows of slate keep
+# to the perspective.
+
+canvas 1600 2000
+ground #e8dfcb
+weave 0.5
+gloss 0.35
+rule Only what stayed still is painted. A stroke here is a thing, put down once and left: one stone, one slate, one tussock. The longer a thing has stood where it is, the thicker its paint. Everything that moved is bare canvas: the sea, the sky, the birds.
+
+# ---- shapes ----
+# land is cut generously on the seaward side: the shore itself is made by hand, pebble by pebble
+shape land 400,2000 412,1920 430,1840 456,1765 490,1700 532,1640 582,1585 636,1540 690,1510 752,1498 790,1482 850,1468 910,1455 965,1446 1010,1440 1010,1349 1052,1295 1052,1212 1048,1212 1048,1204 1088,1204 1088,1212 1084,1212 1084,1273 1348,1256 1404,1338 1404,1418 1480,1392 1560,1372 1600,1362 1600,2000
+shape wall 1010,1349 1292,1338 1292,1436 1010,1440
+shape gable 1292,1338 1348,1256 1404,1338 1404,1424 1292,1436
+shape roof 1010,1349 1292,1338 1348,1256 1068,1274
+shape chim 1048,1204 1088,1204 1088,1212 1084,1212 1084,1276 1052,1297 1052,1212 1048,1212
+shape window 1126,1367 1176,1365 1176,1400 1126,1401
+# two jackdaws in flight across the roof, and the far wing of each
+shape birdA 1160,1302 1165,1298 1170,1297 1175,1297 1179,1286 1186,1275 1193,1270 1192,1279 1189,1289 1188,1297 1194,1299 1204,1298 1206,1303 1195,1304 1185,1307 1174,1307 1167,1305
+shape wingA 1173,1304 1169,1313 1163,1322 1158,1326 1167,1318 1173,1311 1180,1305
+shape birdB 1251,1298 1255,1295 1259,1294 1263,1294 1266,1284 1272,1274 1279,1269 1278,1277 1275,1286 1274,1294 1279,1296 1288,1295 1289,1299 1280,1301 1271,1303 1262,1302 1256,1301
+shape wingB 1262,1295 1262,1284 1265,1276 1270,1271 1268,1280 1267,1289 1268,1295
+# the hand's own mark, left out of a rock in the corner
+shape cmark 1510,1938.4 1502.3,1942.8 1493.5,1941.3 1487.8,1934.4 1487.8,1925.6 1493.5,1918.7 1502.3,1917.2 1510,1921.6 1506.1,1924.9 1501.4,1922.1 1496,1923.1 1492.5,1927.3 1492.5,1932.7 1496,1936.9 1501.4,1937.9 1506.1,1935.1
+
+grid wall 282 95 1010,1349 1292,1338 1292,1436 1010,1440
+grid gable 112 180 1292,1256 1404,1256 1404,1424 1292,1436
+grid roof 280 90 1068,1274 1348,1256 1292,1338 1010,1349
+
+# ---- colours ----
+pal turfA #6b7a45
+pal turfB #5f6e3f
+pal turfC #7a8448
+pal turfD #8f8e52
+pal dry #a39a5e
+pal earth #6a5d3c
+
+## The canvas is toned the colour of daylight. This time the bare canvas is everything that moved.
+
+## The ground first, in long folds the way the slope lies. It has been here longest after the rock.
+only @land
+mask @wall
+mask @gable
+mask @roof
+mask @chim
+set c=turfB c2=turfA w=70 o=1 f=0 k=0.3 body=0.4 soft=3 hair=2.2 even=0.9 vary=0.06 wob=4 ta=0.04 tb=0.06
+s 1000,1460 900,1500 800,1520 730,1535
+s 760,1560 690,1600 640,1650 w=50
+set c=turfA c2=turfC w=100
+s 1120,1456 1010,1510 900,1560 800,1600 690,1640
+set c=turfB c2=turfA w=120
+s 1260,1452 1150,1500 1040,1560 930,1620 820,1680
+set c=turfC c2=turfA
+s 1400,1440 1300,1490 1180,1550 1070,1620 960,1700
+set c=turfA c2=turfB
+s 1560,1390 1450,1460 1340,1530 1220,1610 1110,1700
+set c=turfB c2=turfC
+s 1620,1450 1520,1520 1400,1600 1280,1690 1180,1780
+s 1500,1420 1440,1450 1400,1470 w=40
+s 1600,1380 1540,1400 1480,1420 w=40
+set c=turfC c2=turfB w=100
+s 800,1640 720,1700 650,1770 600,1850
+set c=turfA c2=turfC w=120
+s 940,1660 850,1730 770,1810 700,1900 660,1990
+set c=turfB c2=turfA
+s 1090,1690 990,1770 900,1850 830,1940 800,2010
+set c=turfC c2=turfA
+s 1240,1700 1130,1790 1040,1870 960,1960 930,2010
+set c=turfA c2=turfB
+s 1400,1640 1300,1740 1200,1830 1110,1930 1070,2010
+set c=turfB c2=turfC
+s 1560,1560 1460,1680 1360,1790 1270,1900 1220,2010
+set c=turfA c2=turfC
+s 1620,1650 1540,1770 1450,1880 1380,2010
+s 1620,1800 1560,1900 1510,2010
+s 660,1800 600,1880 560,1960 540,2010 w=70
+## A second going-over, drier grass and yellower, laid between the first so that no fold is one colour.
+set c=turfD c2=turfC w=70 o=0.6
+s 1060,1458 960,1500 850,1560 750,1610
+set c=dry c2=turfD w=90
+s 1190,1454 1080,1510 970,1580 860,1650 750,1730
+set c=turfC c2=turfD
+s 1330,1446 1220,1500 1110,1580 1000,1660 890,1750
+set c=turfD c2=turfB
+s 1480,1410 1370,1480 1260,1560 1150,1650 1040,1750
+set c=dry c2=turfC
+s 1620,1400 1500,1490 1380,1570 1250,1660 1140,1750
+set c=turfD c2=turfA
+s 870,1740 790,1820 730,1900 690,1990
+set c=turfC c2=dry
+s 1020,1750 930,1830 860,1910 810,2000
+set c=turfD c2=turfB
+s 1170,1770 1080,1850 1000,1940 960,2010
+set c=dry c2=turfD
+s 1330,1740 1230,1840 1150,1930 1100,2010
+set c=turfC c2=turfA
+s 1490,1700 1390,1810 1310,1910 1260,2010
+set c=turfD c2=turfC
+s 1610,1730 1520,1850 1440,1950 1410,2010
+## The lip of turf above the beach, and the places the first folds left open.
+set c=turfB c2=turfA w=46 o=1 f=0 k=0.3 body=0.4 soft=3 hair=2.2 even=0.9 vary=0.06 wob=4 ta=0.06 tb=0.06
+s 760,1524 716,1562 674,1612 646,1664 622,1716
+s 606,1790 588,1850 574,1910 562,1966 556,2012
+set c=turfA c2=turfC w=60
+s 660,1700 640,1760 628,1820 610,1880
+s 640,1950 700,1990 780,2010
+s 860,1990 960,2004 1060,2008
+s 1180,2000 1290,2006 1420,2004 1560,2000
+s 1590,1790 1602,1860 1596,1940
+s 1560,1404 1590,1392 1608,1384 w=30
+s 1596,1540 1604,1600 1600,1660 w=50
+s 1590,1960 1604,2012 w=50
+s 700,1636 690,1662 w=30
+s 600,1960 596,2012 w=40
+set w=44
+s 1580,1530 1596,1580 1604,1640
+s 1420,1840 1380,1890 1350,1940
+s 1190,1960 1170,2012
+s 790,1850 760,1900 740,1950
+s 640,1950 620,2012
+## Where the grass has dried, and where it lies in a hollow and stays dark.
+set c=dry c2=turfD w=120 o=0.3 body=0.2
+s 1300,1500 1180,1580 1060,1660
+s 900,1720 820,1800 760,1880
+s 1540,1660 1460,1760 1400,1850
+set c=#4f6038 c2=turfB o=0.3
+s 1120,1560 1010,1640 900,1700
+s 1500,1500 1420,1560 1340,1620
+s 1250,1780 1160,1860 1080,1930
+s 760,1600 700,1680 660,1760
+
+unmask
+
+# ---- the house ----
+pal mortar #5b554b
+pal s1 #8f8878
+pal s2 #a39b88
+pal s3 #7b756a
+pal s4 #b0a48c
+pal s5 #6d6a62
+pal s6 #9b9b90
+pal b1 #55606e
+pal b2 #626e7b
+pal b3 #4a5461
+pal b4 #6c7884
+pal b5 #5a6570
+pal moss #5e6a52
+brush flat w=30 o=1 f=0 k=0 body=0.5 soft=1.5 hair=2 even=1 vary=0.04 wob=0 ta=0 tb=0
+brush stone w=7.6 o=1 f=0 k=0 body=1.4 soft=1.1 hair=1.6 even=0.85 vary=0.07 wob=0.5 ta=0.12 tb=0.12
+brush slate w=9.5 o=1 f=0 k=0 body=1.2 soft=1.1 hair=1.6 even=0.85 vary=0.06 wob=0.4 ta=0.08 tb=0.08
+brush line w=3 o=1 f=0 k=0 body=0.9 soft=1 hair=1.5 even=1 vary=0.04 wob=0.2 ta=0.02 tb=0.02
+
+## The house wall. First what is between the stones, then the stones, one stroke each, course by course from the eaves down.
+only @wall
+mask @window
+use flat c=mortar w=30
+g wall -4,12 286,12
+g wall -4,36 286,36
+g wall -4,60 286,60
+g wall -4,84 286,84
+use stone
+g wall 2,4.75 24,4.75 c=s1
+g wall 27,4.75 58,4.75 c=s2
+g wall 61,4.75 80,4.75 c=s3
+g wall 83,4.75 112,4.75 c=s1
+g wall 115,4.75 131,4.75 c=s4
+g wall 134,4.75 166,4.75 c=s6
+g wall 169,4.75 190,4.75 c=s1
+g wall 193,4.75 222,4.75 c=s3
+g wall 225,4.75 246,4.75 c=s2
+g wall 249,4.75 280,4.75 c=s1
+g wall 2,14.25 16,14.25 c=s3
+g wall 19,14.25 48,14.25 c=s1
+g wall 51,14.25 76,14.25 c=s4
+g wall 79,14.25 98,14.25 c=s6
+g wall 101,14.25 134,14.25 c=s1
+g wall 137,14.25 158,14.25 c=s2
+g wall 161,14.25 196,14.25 c=s5
+g wall 199,14.25 218,14.25 c=s1
+g wall 221,14.25 252,14.25 c=s6
+g wall 255,14.25 280,14.25 c=s3
+g wall 2,23.75 30,23.75 c=s2
+g wall 33,23.75 52,23.75 c=s1
+g wall 55,23.75 86,23.75 c=s3
+g wall 89,23.75 108,23.75 c=s2
+g wall 175,23.75 200,23.75 c=s1
+g wall 203,23.75 234,23.75 c=s4
+g wall 237,23.75 256,23.75 c=s1
+g wall 259,23.75 280,23.75 c=s6
+g wall 2,33.25 20,33.25 c=s1
+g wall 23,33.25 56,33.25 c=s6
+g wall 59,33.25 82,33.25 c=s1
+g wall 85,33.25 113,33.25 c=s3
+g wall 169,33.25 192,33.25 c=s2
+g wall 195,33.25 226,33.25 c=s1
+g wall 229,33.25 250,33.25 c=s3
+g wall 253,33.25 280,33.25 c=s2
+g wall 2,42.75 34,42.75 c=s4
+g wall 37,42.75 60,42.75 c=s3
+g wall 63,42.75 92,42.75 c=s2
+g wall 95,42.75 113,42.75 c=s1
+g wall 169,42.75 204,42.75 c=s6
+g wall 207,42.75 228,42.75 c=s1
+g wall 231,42.75 262,42.75 c=s5
+g wall 265,42.75 280,42.75 c=s1
+g wall 2,52.25 18,52.25 c=s6
+g wall 21,52.25 50,52.25 c=s1
+g wall 53,52.25 78,52.25 c=s5
+g wall 81,52.25 113,52.25 c=s4
+g wall 169,52.25 186,52.25 c=s3
+g wall 189,52.25 220,52.25 c=s2
+g wall 223,52.25 248,52.25 c=s1
+g wall 251,52.25 280,52.25 c=s4
+g wall 2,61.75 28,61.75 c=s3
+g wall 31,61.75 62,61.75 c=s2
+g wall 65,61.75 84,61.75 c=s1
+g wall 87,61.75 110,61.75 c=s6
+g wall 113,62.5 140,62.5 c=s1
+g wall 143,62.5 168,62.5 c=s3
+g wall 171,61.75 200,61.75 c=s1
+g wall 203,61.75 222,61.75 c=s4
+g wall 225,61.75 256,61.75 c=s2
+g wall 259,61.75 280,61.75 c=s3
+g wall 2,71.25 22,71.25 c=s1
+g wall 25,71.25 54,71.25 c=s4
+g wall 57,71.25 88,71.25 c=s1
+g wall 91,71.25 110,71.25 c=s3
+g wall 113,71.25 146,71.25 c=s2
+g wall 149,71.25 170,71.25 c=s6
+g wall 173,71.25 206,71.25 c=s3
+g wall 209,71.25 238,71.25 c=s1
+g wall 241,71.25 262,71.25 c=s6
+g wall 265,71.25 280,71.25 c=s2
+g wall 2,80.75 36,80.75 c=s5
+g wall 39,80.75 60,80.75 c=s1
+g wall 63,80.75 94,80.75 c=s6
+g wall 97,80.75 126,80.75 c=s1
+g wall 129,80.75 150,80.75 c=s4
+g wall 153,80.75 184,80.75 c=s1
+g wall 187,80.75 208,80.75 c=s2
+g wall 211,80.75 244,80.75 c=s3
+g wall 247,80.75 280,80.75 c=s1
+g wall 2,90.25 26,90.25 c=s2
+g wall 29,90.25 62,90.25 c=s3
+g wall 65,90.25 90,90.25 c=s1
+g wall 93,90.25 128,90.25 c=s5
+g wall 131,90.25 162,90.25 c=s2
+g wall 165,90.25 190,90.25 c=s1
+g wall 193,90.25 226,90.25 c=s4
+g wall 229,90.25 252,90.25 c=s1
+g wall 255,90.25 280,90.25 c=s5
+## Lichen has been on some of these stones for a hundred years. It counts as still.
+set c=#b9a85a w=4 body=0.6 ta=0.3 tb=0.3 even=0.6
+g wall 40,14 44,13
+g wall 70,43 75,42
+g wall 205,24 209,23
+g wall 232,71 236,71
+g wall 98,81 103,80
+g wall 12,62 15,61
+set c=#cfc9b4 w=3.4
+g wall 150,5 154,5
+g wall 245,52 249,51
+g wall 30,81 34,81
+g wall 180,90 184,90
+unmask
+
+## The gable end, the same way. It faces south and is the warmer for it.
+only @gable
+use flat c=mortar w=34
+g gable -4,15 116,15
+g gable -4,45 116,45
+g gable -4,75 116,75
+g gable -4,105 116,105
+g gable -4,135 116,135
+g gable -4,165 116,165
+use stone
+g gable 52,5 60,5 c=s1
+g gable 46,15 55,15 c=s3
+g gable 57,15 66,15 c=s2
+g gable 40,25 53,25 c=s1
+g gable 56,25 72,25 c=s4
+g gable 34,35 48,35 c=s2
+g gable 51,35 63,35 c=s1
+g gable 66,35 78,35 c=s3
+g gable 27,45 42,45 c=s4
+g gable 45,45 58,45 c=s6
+g gable 61,45 74,45 c=s1
+g gable 77,45 85,45 c=s2
+g gable 21,55 36,55 c=s1
+g gable 39,55 52,55 c=s3
+g gable 55,55 71,55 c=s4
+g gable 74,55 91,55 c=s1
+g gable 14,65 30,65 c=s3
+g gable 33,65 47,65 c=s2
+g gable 50,65 66,65 c=s1
+g gable 69,65 82,65 c=s6
+g gable 85,65 98,65 c=s4
+g gable 8,75 22,75 c=s2
+g gable 25,75 41,75 c=s1
+g gable 44,75 57,75 c=s4
+g gable 60,75 76,75 c=s3
+g gable 79,75 92,75 c=s1
+g gable 95,75 104,75 c=s2
+g gable 2,85 18,85 c=s4
+g gable 21,85 34,85 c=s1
+g gable 37,85 53,85 c=s6
+g gable 56,85 70,85 c=s1
+g gable 73,85 88,85 c=s3
+g gable 91,85 110,85 c=s4
+g gable 2,95 12,95 c=s1
+g gable 15,95 31,95 c=s3
+g gable 34,95 48,95 c=s4
+g gable 51,95 67,95 c=s2
+g gable 70,95 84,95 c=s1
+g gable 87,95 99,95 c=s6
+g gable 102,95 110,95 c=s1
+g gable 2,105 20,105 c=s2
+g gable 23,105 37,105 c=s4
+g gable 40,105 56,105 c=s1
+g gable 59,105 73,105 c=s3
+g gable 76,105 92,105 c=s4
+g gable 95,105 110,105 c=s2
+g gable 2,115 14,115 c=s3
+g gable 17,115 33,115 c=s1
+g gable 36,115 50,115 c=s6
+g gable 53,115 69,115 c=s4
+g gable 72,115 86,115 c=s1
+g gable 89,115 110,115 c=s3
+g gable 2,125 22,125 c=s1
+g gable 25,125 39,125 c=s2
+g gable 42,125 58,125 c=s3
+g gable 61,125 77,125 c=s1
+g gable 80,125 94,125 c=s4
+g gable 97,125 110,125 c=s1
+g gable 2,135 16,135 c=s4
+g gable 19,135 35,135 c=s1
+g gable 38,135 52,135 c=s5
+g gable 55,135 71,135 c=s2
+g gable 74,135 90,135 c=s1
+g gable 93,135 110,135 c=s6
+g gable 2,145 24,145 c=s3
+g gable 27,145 41,145 c=s1
+g gable 44,145 60,145 c=s4
+g gable 63,145 79,145 c=s1
+g gable 82,145 96,145 c=s2
+g gable 99,145 110,145 c=s3
+g gable 2,155 18,155 c=s1
+g gable 21,155 37,155 c=s6
+g gable 40,155 54,155 c=s1
+g gable 57,155 73,155 c=s3
+g gable 76,155 92,155 c=s1
+g gable 95,155 110,155 c=s4
+g gable 2,165 26,165 c=s5
+g gable 29,165 45,165 c=s2
+g gable 48,165 62,165 c=s1
+g gable 65,165 81,165 c=s4
+g gable 84,165 98,165 c=s3
+g gable 101,165 110,165 c=s1
+g gable 2,175 20,175 c=s1
+g gable 23,175 39,175 c=s3
+g gable 42,175 58,175 c=s2
+g gable 61,175 75,175 c=s5
+g gable 78,175 94,175 c=s1
+g gable 97,175 110,175 c=s2
+set c=#b9a85a w=4 body=0.6 ta=0.3 tb=0.3 even=0.6
+g gable 48,46 52,45
+g gable 30,86 35,85
+g gable 80,106 84,105
+g gable 60,126 65,125
+g gable 20,146 24,146
+g gable 90,156 95,155
+g gable 44,116 47,115
+g gable 70,66 73,65
+unmask
+
+## The roof: slates, a row at a time from the eaves up, so that each row lies over the one below as slates do.
+## Two shapes are covered with paper first and get no paint. The jackdaws are awake and crossing the roof.
+only @roof
+mask @birdA
+mask @wingA
+mask @birdB
+mask @wingB
+use flat c=#3d4651 w=34
+g roof -4,15 284,15
+g roof -4,45 284,45
+g roof -4,75 284,75
+use slate
+g roof 1,85 14,85 c=b1
+g roof 16,85 29,85 c=b2
+g roof 31,85 45,85 c=b3
+g roof 47,85 59,85 c=b1
+g roof 61,85 75,85 c=b5
+g roof 77,85 90,85 c=b2
+g roof 92,85 105,85 c=b1
+g roof 107,85 121,85 c=b4
+g roof 123,85 135,85 c=b3
+g roof 137,85 151,85 c=b1
+g roof 153,85 166,85 c=b5
+g roof 168,85 181,85 c=b2
+g roof 183,85 197,85 c=b1
+g roof 199,85 211,85 c=b3
+g roof 213,85 227,85 c=b4
+g roof 229,85 242,85 c=b1
+g roof 244,85 257,85 c=b2
+g roof 259,85 272,85 c=b5
+g roof 274,85 279,85 c=b1
+g roof 1,75 7,75 c=b2
+g roof 9,75 22,75 c=b1
+g roof 24,75 38,75 c=b4
+g roof 40,75 52,75 c=b3
+g roof 54,75 68,75 c=b1
+g roof 70,75 83,75 c=b2
+g roof 85,75 98,75 c=b5
+g roof 100,75 114,75 c=b1
+g roof 116,75 128,75 c=b3
+g roof 130,75 144,75 c=b2
+g roof 146,75 159,75 c=b1
+g roof 161,75 174,75 c=moss
+g roof 176,75 190,75 c=b4
+g roof 192,75 204,75 c=b1
+g roof 206,75 220,75 c=b3
+g roof 222,75 235,75 c=b2
+g roof 237,75 250,75 c=b1
+g roof 252,75 266,75 c=b5
+g roof 268,75 279,75 c=b3
+g roof 1,65 13,65 c=b3
+g roof 15,65 29,65 c=b1
+g roof 31,65 44,65 c=b2
+g roof 46,65 60,65 c=b5
+g roof 62,65 74,65 c=b1
+g roof 76,65 90,65 c=b3
+g roof 92,65 105,65 c=b4
+g roof 107,65 120,65 c=b1
+g roof 122,65 136,65 c=b2
+g roof 138,65 150,65 c=b1
+g roof 152,65 166,65 c=b3
+g roof 168,65 181,65 c=b5
+g roof 183,65 196,65 c=b1
+g roof 198,65 212,65 c=b2
+g roof 214,65 226,65 c=b4
+g roof 228,65 242,65 c=b1
+g roof 244,65 257,65 c=b3
+g roof 259,65 272,65 c=b1
+g roof 274,65 279,65 c=b2
+g roof 1,55 6,55 c=b1
+g roof 8,55 22,55 c=b5
+g roof 24,55 37,55 c=b1
+g roof 39,55 52,55 c=b2
+g roof 54,55 67,55 c=b3
+g roof 69,55 83,55 c=b1
+g roof 85,55 97,55 c=moss
+g roof 99,55 113,55 c=b2
+g roof 115,55 128,55 c=b1
+g roof 130,55 143,55 c=b4
+g roof 145,55 159,55 c=b3
+g roof 161,55 173,55 c=b1
+g roof 175,55 189,55 c=b2
+g roof 191,55 204,55 c=b5
+g roof 206,55 219,55 c=b1
+g roof 221,55 235,55 c=b3
+g roof 237,55 249,55 c=b2
+g roof 251,55 265,55 c=b1
+g roof 267,55 279,55 c=b4
+g roof 1,45 14,45 c=b2
+g roof 16,45 28,45 c=b4
+g roof 30,45 44,45 c=b1
+g roof 46,45 59,45 c=b3
+g roof 61,45 74,45 c=b2
+g roof 76,45 89,45 c=b1
+g roof 91,45 105,45 c=b5
+g roof 107,45 119,45 c=b1
+g roof 121,45 135,45 c=b3
+g roof 137,45 150,45 c=b2
+g roof 152,45 165,45 c=b1
+g roof 167,45 181,45 c=b4
+g roof 183,45 195,45 c=b3
+g roof 197,45 211,45 c=b1
+g roof 213,45 226,45 c=b2
+g roof 228,45 241,45 c=b5
+g roof 243,45 257,45 c=b1
+g roof 259,45 271,45 c=b3
+g roof 273,45 279,45 c=b1
+g roof 1,35 8,35 c=b3
+g roof 10,35 23,35 c=b1
+g roof 25,35 39,35 c=b2
+g roof 41,35 53,35 c=b1
+g roof 55,35 69,35 c=b5
+g roof 71,35 84,35 c=b3
+g roof 86,35 99,35 c=b1
+g roof 101,35 115,35 c=b4
+g roof 117,35 129,35 c=b2
+g roof 131,35 145,35 c=b1
+g roof 147,35 160,35 c=b3
+g roof 162,35 175,35 c=b1
+g roof 177,35 191,35 c=b2
+g roof 193,35 205,35 c=moss
+g roof 207,35 221,35 c=b1
+g roof 223,35 236,35 c=b4
+g roof 238,35 251,35 c=b3
+g roof 253,35 267,35 c=b1
+g roof 269,35 279,35 c=b2
+g roof 1,25 13,25 c=b1
+g roof 15,25 28,25 c=b3
+g roof 30,25 43,25 c=b5
+g roof 45,25 59,25 c=b1
+g roof 61,25 73,25 c=b2
+g roof 75,25 89,25 c=b4
+g roof 91,25 104,25 c=b1
+g roof 106,25 119,25 c=b3
+g roof 121,25 135,25 c=b1
+g roof 137,25 149,25 c=b2
+g roof 151,25 165,25 c=b5
+g roof 167,25 180,25 c=b1
+g roof 182,25 195,25 c=b3
+g roof 197,25 211,25 c=b4
+g roof 213,25 225,25 c=b1
+g roof 227,25 241,25 c=b2
+g roof 243,25 256,25 c=b1
+g roof 258,25 271,25 c=b3
+g roof 273,25 279,25 c=b5
+g roof 1,15 7,15 c=b4
+g roof 9,15 23,15 c=b1
+g roof 25,15 38,15 c=b2
+g roof 40,15 53,15 c=b3
+g roof 55,15 68,15 c=b1
+g roof 70,15 84,15 c=b5
+g roof 86,15 98,15 c=b1
+g roof 100,15 114,15 c=b2
+g roof 116,15 129,15 c=b3
+g roof 131,15 144,15 c=b1
+g roof 146,15 160,15 c=b4
+g roof 162,15 174,15 c=b1
+g roof 176,15 190,15 c=b3
+g roof 192,15 205,15 c=b2
+g roof 207,15 220,15 c=b1
+g roof 222,15 236,15 c=b5
+g roof 238,15 250,15 c=b1
+g roof 252,15 266,15 c=b2
+g roof 268,15 279,15 c=b3
+g roof 1,5.5 14,5.5 c=b5
+g roof 16,5.5 29,5.5 c=b1
+g roof 31,5.5 45,5.5 c=b3
+g roof 47,5.5 60,5.5 c=b2
+g roof 62,5.5 75,5.5 c=b1
+g roof 77,5.5 91,5.5 c=b4
+g roof 93,5.5 106,5.5 c=b1
+g roof 108,5.5 121,5.5 c=b3
+g roof 123,5.5 137,5.5 c=b2
+g roof 139,5.5 151,5.5 c=b1
+g roof 153,5.5 167,5.5 c=b5
+g roof 169,5.5 182,5.5 c=b3
+g roof 184,5.5 197,5.5 c=b1
+g roof 199,5.5 213,5.5 c=b2
+g roof 215,5.5 227,5.5 c=b1
+g roof 229,5.5 243,5.5 c=b4
+g roof 245,5.5 258,5.5 c=b3
+g roof 260,5.5 273,5.5 c=b1
+g roof 275,5.5 279,5.5 c=b2
+## The ridge is stone, laid end to end.
+use stone w=5 body=1.5
+g roof 0,1.2 22,1.2 c=s5
+g roof 24,1.2 46,1.2 c=s3
+g roof 48,1.2 72,1.2 c=s5
+g roof 74,1.2 96,1.2 c=s1
+g roof 98,1.2 120,1.2 c=s3
+g roof 122,1.2 146,1.2 c=s5
+g roof 148,1.2 170,1.2 c=s3
+g roof 172,1.2 194,1.2 c=s1
+g roof 196,1.2 220,1.2 c=s5
+g roof 222,1.2 244,1.2 c=s3
+g roof 246,1.2 268,1.2 c=s5
+g roof 270,1.2 280,1.2 c=s1
+unmask
+
+## The chimney. Nothing is sitting on it.
+only @chim
+use flat c=mortar w=44
+s 1068,1200 1068,1300
+use stone
+s 1053.5,1217 1067,1217 c=s1
+s 1069.5,1217 1083,1217 c=s3
+s 1053.5,1226.5 1061,1226.5 c=s2
+s 1063.5,1226.5 1077,1226.5 c=s1
+s 1079.5,1226.5 1083.5,1226.5 c=s4
+s 1053.5,1236 1069,1236 c=s3
+s 1071.5,1236 1083,1236 c=s1
+s 1053.5,1245.5 1063,1245.5 c=s1
+s 1065.5,1245.5 1079,1245.5 c=s6
+s 1053.5,1255 1066,1255 c=s4
+s 1068.5,1255 1083,1255 c=s2
+s 1053.5,1264.5 1059,1264.5 c=s1
+s 1061.5,1264.5 1075,1264.5 c=s3
+s 1077.5,1264.5 1083.5,1264.5 c=s1
+s 1053.5,1274 1068,1274 c=s2
+s 1070.5,1274 1083,1274 c=s5
+s 1053.5,1283.5 1064,1283.5 c=s1
+s 1066.5,1283.5 1078,1283.5 c=s4
+s 1053.5,1293 1062,1293 c=s3
+s 1049,1208 1087,1208 c=s5 w=7.4 ta=0.03 tb=0.03
+unmask
+
+## The window. Glass keeps still, so the room behind it is painted too: the dark, and on the back wall a shelf.
+## On the shelf, left to right: a shell, a book with a deep blue cover, a feather. They have not moved.
+## The flame of the lamp on the sill is the one thing in the room that did, so it gets no paint.
+only @window
+mask 1160.6,1391 1162,1386.4 1163.4,1391 1162,1392.6
+use flat c=#2a2623 w=20
+s 1122,1375 1180,1374
+s 1122,1392 1180,1391
+use line c=#8a6a45 w=2.2 body=0.8
+s 1128.5,1378.4 1148.5,1377.8
+set c=#f0e2d2 w=3.6 body=0.4 ta=0.2 tb=0.2
+s 1131,1376.2 1135,1374.2
+set c=#1f3f94 w=3.4 body=0.4 ta=0.1 tb=0.1
+s 1139.2,1377 1139.2,1371
+set c=#c4c8cc w=1.6 body=0.45 ta=0.05 tb=0.4
+s 1143,1377 1146.6,1371.4
+set c=#8a6a2a w=5 body=0.9 ta=0.1 tb=0.1
+s 1162,1400 1162,1394.5
+set c=#9fb0b0 w=1.4 o=0.8 ta=0 tb=0
+s 1159.8,1393.5 1159.8,1386
+s 1164.2,1393.5 1164.2,1386
+unmask
+use line c=#bdb8a8 w=3.2
+s 1150.8,1365 1150.8,1401
+s 1125,1382.5 1177,1381.5 w=3
+set w=3.4
+s 1124,1366.5 1178,1364.5
+s 1124,1401.5 1178,1400.5
+s 1125.5,1366 1125.5,1402
+s 1176.5,1364 1176.5,1401
+## A beam of wood over the window, and a long stone under it.
+set c=#6b5a45 w=7 body=1 wob=0.5
+s 1118,1361.5 1184,1359
+set c=#a8a294 w=5 body=1.4
+s 1120,1405 1182,1403.5
+
+## The bench against the wall. It has stood there some years; nobody is on it.
+set c=#8b7a62 w=5 body=0.9
+s 1188,1420 1252,1418.5
+set c=#5e5140 w=2.5
+s 1189,1424 1251,1422.5
+set c=#6f6150 w=4
+s 1194,1425 1194,1440
+s 1246,1423 1246,1438.5
+
+# ---- the shore ----
+pal p1 #9c988c
+pal p2 #b4afa0
+pal p3 #86837a
+pal p4 #c2bba8
+pal p5 #777268
+pal p6 #9a6a4a
+pal p7 #5f6068
+pal p8 #dcd6c6
+brush pebble w=5 o=1 f=0 k=0 body=1 soft=1.1 hair=1.6 even=0.85 vary=0.07 wob=0.3 ta=0.25 tb=0.25
+brush tuss w=5 o=1 f=0 k=0 body=0.6 soft=1.1 hair=1.3 even=0.5 vary=0.12 wob=0.6 ta=0.15 tb=0.15
+
+## The shingle above high water: the bank of it first, then pebbles one at a time. The land has no edge of its own;
+## it stops where the last pebble that kept still stops.
+only @land
+set c=p1 c2=p3 w=14 o=0.95 f=0 k=0.1 body=0.8 soft=1.3 hair=1.2 even=0.4 vary=0.14 wob=1.5 ta=0.2 tb=0.2
+s 730,1512 746,1508
+s 706,1528 726,1524 w=20 c=p3 c2=p5
+s 682,1544 706,1540 w=24 c=p2 c2=p1
+s 658,1560 686,1556 w=28
+s 636,1578 668,1574 w=30 c=p3 c2=p1
+s 618,1598 652,1594 w=32 c=p1 c2=p2
+s 600,1620 636,1616 w=34 c=p5 c2=p3
+s 584,1644 622,1640 w=36 c=p2 c2=p1
+s 568,1668 608,1664 w=38
+s 554,1694 596,1690 w=40 c=p3 c2=p5
+s 540,1720 584,1716 w=42 c=p1 c2=p2
+s 528,1746 574,1742 w=44 c=p2 c2=p3
+s 518,1772 566,1768 w=44
+s 508,1798 558,1794 w=46 c=p5 c2=p1
+s 498,1824 550,1820 w=46 c=p1 c2=p3
+s 490,1852 544,1848 w=48 c=p2 c2=p1
+s 482,1880 538,1876 w=48 c=p3 c2=p5
+s 474,1908 532,1904 w=50
+s 468,1936 528,1932 w=50 c=p1 c2=p2
+s 462,1964 524,1960 w=52 c=p3 c2=p1
+s 456,1994 520,1990 w=52 c=p2 c2=p5
+use pebble w=3
+s 742,1506 747,1505 c=p2
+s 733,1507 738,1506 c=p5
+s 724,1508 729,1507 c=p1
+s 722,1516 727,1515 c=p4
+s 712,1517 717,1516 c=p3
+s 703,1518 708,1517 c=p2
+s 731,1515 736,1514 c=p7
+s 700,1528 706,1527 c=p1
+s 690,1529 696,1528 c=p6
+s 711,1527 717,1526 c=p2
+s 682,1531 688,1530 c=p5
+use pebble w=4
+s 676,1540 683,1539 c=p2
+s 688,1539 695,1538 c=p3
+s 665,1542 672,1541 c=p4
+s 698,1538 705,1537 c=p1
+s 656,1544 663,1543 c=p7
+s 662,1552 669,1551 c=p1
+s 650,1554 657,1553 c=p8
+s 674,1551 681,1550 c=p5
+s 640,1556 647,1555 c=p2
+s 684,1550 691,1549 c=p3
+s 645,1566 652,1565 c=p3
+s 632,1568 639,1567 c=p2
+s 658,1565 665,1564 c=p6
+s 620,1571 627,1570 c=p1
+s 670,1563 677,1562 c=p4
+s 628,1580 636,1579 c=p4
+s 615,1582 623,1581 c=p5
+s 642,1578 650,1577 c=p1
+s 603,1585 611,1584 c=p2
+s 655,1577 663,1576 c=p3
+s 668,1575 676,1574 c=p7
+use pebble w=5
+s 612,1596 621,1595 c=p1
+s 598,1598 607,1597 c=p3
+s 626,1594 635,1593 c=p2
+s 586,1601 595,1600 c=p8
+s 640,1592 649,1591 c=p5
+s 654,1590 663,1589 c=p4
+s 596,1612 605,1611 c=p2
+s 582,1614 591,1613 c=p6
+s 610,1610 619,1609 c=p3
+s 570,1617 579,1616 c=p1
+s 624,1608 633,1607 c=p7
+s 640,1606 649,1605 c=p2
+s 582,1630 592,1629 c=p5
+s 566,1632 576,1631 c=p2
+s 598,1628 608,1627 c=p1
+s 552,1635 562,1634 c=p4
+s 614,1626 624,1625 c=p3
+s 630,1624 640,1623 c=p8
+use pebble w=6
+s 566,1650 577,1649 c=p3
+s 550,1652 561,1651 c=p1
+s 584,1648 595,1647 c=p2
+s 536,1655 547,1654 c=p7
+s 600,1646 611,1645 c=p4
+s 618,1644 629,1643 c=p5
+s 634,1642 645,1641 c=p1
+s 552,1670 563,1669 c=p2
+s 536,1672 547,1671 c=p6
+s 570,1668 581,1667 c=p1
+s 520,1675 531,1674 c=p3
+s 588,1666 599,1665 c=p8
+s 606,1664 617,1663 c=p2
+s 538,1692 550,1691 c=p4
+s 520,1694 532,1693 c=p2
+s 556,1690 568,1689 c=p5
+s 506,1697 518,1696 c=p1
+s 574,1688 586,1687 c=p3
+s 594,1686 606,1685 c=p1
+s 612,1684 624,1683 c=p7
+use pebble w=7
+s 526,1714 539,1713 c=p1
+s 508,1716 521,1715 c=p3
+s 546,1712 559,1711 c=p2
+s 492,1719 505,1718 c=p8
+s 564,1710 577,1709 c=p6
+s 584,1708 597,1707 c=p4
+s 514,1738 527,1737 c=p5
+s 494,1740 507,1739 c=p2
+s 534,1736 547,1735 c=p1
+s 478,1743 491,1742 c=p3
+s 552,1734 565,1733 c=p4
+s 502,1762 516,1761 c=p2
+s 482,1764 496,1763 c=p7
+s 522,1760 536,1759 c=p3
+s 466,1767 480,1766 c=p1
+s 540,1758 554,1757 c=p8
+use pebble w=8
+s 492,1788 507,1787 c=p1
+s 472,1790 487,1789 c=p4
+s 512,1786 527,1785 c=p5
+s 456,1793 471,1792 c=p2
+s 532,1784 547,1783 c=p3
+s 552,1782 567,1781 c=p6
+s 570,1780 585,1779 c=p2
+s 484,1814 499,1813 c=p3
+s 462,1816 477,1815 c=p2
+s 506,1812 521,1811 c=p8
+s 446,1819 461,1818 c=p5
+s 526,1810 541,1809 c=p1
+s 548,1808 563,1807 c=p4
+s 566,1806 581,1805 c=p7
+use pebble w=9
+s 476,1842 492,1841 c=p2
+s 454,1844 470,1843 c=p1
+s 498,1840 514,1839 c=p4
+s 438,1847 454,1846 c=p3
+s 520,1838 536,1837 c=p5
+s 542,1836 558,1835 c=p2
+s 562,1834 578,1833 c=p1
+s 470,1870 487,1869 c=p6
+s 446,1872 463,1871 c=p3
+s 494,1868 511,1867 c=p1
+s 430,1875 447,1874 c=p2
+s 516,1866 533,1865 c=p8
+s 538,1864 555,1863 c=p3
+s 556,1862 573,1861 c=p5
+use pebble w=10
+s 464,1900 482,1899 c=p1
+s 440,1902 458,1901 c=p5
+s 488,1898 506,1897 c=p2
+s 424,1905 442,1904 c=p4
+s 512,1896 530,1895 c=p3
+s 534,1894 552,1893 c=p1
+s 552,1892 570,1891 c=p7
+s 458,1930 477,1929 c=p3
+s 434,1932 453,1931 c=p2
+s 484,1928 503,1927 c=p6
+s 418,1935 437,1934 c=p1
+s 508,1926 527,1925 c=p4
+s 530,1924 549,1923 c=p2
+use pebble w=11
+s 454,1962 474,1961 c=p2
+s 428,1964 448,1963 c=p8
+s 480,1960 500,1959 c=p1
+s 412,1967 432,1966 c=p3
+s 506,1958 526,1957 c=p5
+s 528,1956 548,1955 c=p1
+s 450,1992 470,1991 c=p4
+s 424,1994 444,1993 c=p1
+s 478,1990 498,1989 c=p3
+s 408,1997 428,1996 c=p2
+s 504,1988 524,1987 c=p7
+s 526,1986 546,1985 c=p2
+## Shingle is never one grey. Damp where it lies deep, pale where it has dried; and stones out of line, of every size.
+set c=p5 c2=p3 w=18 o=0.5 f=0 k=0 body=0.4 soft=1.4 hair=1.3 even=0.5 vary=0.12 wob=2 ta=0.2 tb=0.2
+s 690,1548 672,1562
+s 616,1626 602,1648
+s 560,1716 550,1740
+s 520,1830 512,1856
+s 498,1930 494,1956
+set c=p4 c2=p2 o=0.45
+s 640,1596 626,1612
+s 580,1680 570,1702
+s 534,1790 526,1812
+s 506,1890 500,1912
+use pebble w=5
+s 706,1534 712,1532 c=p3
+s 664,1558 671,1557 c=p4 w=6
+s 634,1586 641,1584 c=p5
+s 648,1600 658,1598 c=p1 w=7
+s 606,1620 613,1619 c=p8 w=4
+s 590,1640 601,1638 c=p3 w=8
+s 574,1660 580,1659 c=p6 w=4
+s 560,1680 572,1678 c=p2 w=9
+s 544,1704 551,1703 c=p7
+s 528,1726 541,1724 c=p1 w=10
+s 510,1750 517,1749 c=p4
+s 496,1776 510,1774 c=p3 w=11
+s 520,1800 527,1799 c=p8 w=5
+s 478,1802 485,1801 c=p5 w=6
+s 500,1826 516,1824 c=p2 w=12
+s 540,1822 548,1821 c=p6 w=6
+s 462,1858 470,1857 c=p1 w=6
+s 506,1854 513,1853 c=p7 w=5
+s 484,1884 502,1882 c=p3 w=14
+s 530,1880 538,1879 c=p4 w=6
+s 452,1916 461,1915 c=p8 w=7
+s 496,1914 504,1913 c=p5 w=6
+s 470,1946 490,1944 c=p1 w=15
+s 520,1942 529,1941 c=p2 w=7
+s 440,1978 450,1977 c=p3 w=8
+s 492,1976 501,1975 c=p6 w=7
+s 516,1972 536,1970 c=p4 w=13
+
+## A few stones lower down that the water reached now and then. They hardly count as having kept still.
+use pebble w=6 o=0.45 body=0.3
+s 560,1622 569,1621 c=p3
+s 540,1646 550,1645 c=p1
+s 514,1668 525,1667 c=p5
+s 498,1702 510,1701 c=p3
+s 470,1728 482,1727 c=p1
+s 452,1756 465,1755 c=p5
+s 440,1802 454,1801 c=p3
+s 424,1834 439,1833 c=p1
+s 414,1880 430,1879 c=p5
+s 668,1548 674,1547 c=p3 w=4
+s 700,1522 705,1521 c=p1 w=3
+s 620,1578 627,1577 c=p5 w=4
+## Along the top of the shingle, the weed the last spring tide left. It has been drying there for days.
+set c=#3f3a2a c2=#5a4f30 w=5 o=0.9 f=0 k=0 body=0.5 soft=1 hair=0.9 even=0.2 vary=0.2 wob=2 ta=0.1 tb=0.1
+s 748,1512 728,1522 706,1536
+s 696,1544 676,1560 660,1574
+s 650,1586 634,1604 622,1622
+s 614,1636 602,1660 594,1682
+s 590,1698 584,1716
+s 570,1790 562,1818 556,1846
+s 552,1862 546,1894 542,1924
+s 540,1940 536,1972 534,2004
+## Turf laps over the top of the beach in tongues.
+use tuss w=5 c=turfC c2=turfA body=0.5
+s 724,1528 732,1524 740,1528
+s 688,1556 696,1552 704,1556
+s 652,1590 661,1586 670,1590
+s 628,1626 637,1622 646,1626
+use tuss w=7 c=turfA c2=turfC body=0.5
+s 606,1668 617,1663 628,1668
+s 592,1700 603,1695 614,1700
+s 578,1800 590,1794 602,1800
+use tuss w=9 c=turfC c2=turfA body=0.5
+s 560,1856 574,1849 588,1856
+s 548,1920 563,1912 578,1920
+s 540,1984 555,1976 570,1984
+unmask
+
+# ---- the boat ----
+## A boat is drawn up on the shingle. It came in this morning, so its paint is thin.
+## Whoever came in it is somewhere about, moving, and is not in the picture.
+only @land
+set c=#9a7a4a c2=#8a6a3e w=24 o=0.92 f=0 k=0 body=0.25 soft=1.2 hair=1.6 even=0.8 vary=0.08 wob=0.6 ta=0.1 tb=0.25
+s 554,1767 612,1738 668,1711
+set w=12
+s 556,1774 600,1760 636,1738 664,1716
+s 551,1760 590,1736 628,1716 662,1710
+set c=#3f6f73 c2=#4a7a7c w=6 ta=0.05 tb=0.3
+s 558,1784 592,1776 624,1761 654,1739 674,1712
+set c=#2e2e31 c2=none w=5
+s 560,1790 594,1782 626,1767 655,1746 673,1722
+set c=#7a5c38 w=5 ta=0.05 tb=0.05
+s 547,1757 557,1779
+set c=#b08e5a w=6
+s 587.3,1733.6 600.7,1760.4
+s 622.4,1713.8 637.6,1744.2
+set c=#c9b98a w=2.2 ta=0.02 tb=0.1 body=0.3
+s 557,1779 590,1771 621,1756 650,1734 672,1708
+s 547,1757 575,1739 603,1720 636,1710 672,1708
+set c=#c2b48a w=2 body=0.25
+s 566,1766 650,1722
+s 570,1758 655,1717
+set c=#b9a98a w=1.4 wob=1
+s 672,1708 684,1708 694,1702 704,1704
+unmask
+
+# ---- the path ----
+## Flat stones set in the turf, from the shingle up to the bench. They were laid before anyone now living.
+only @land
+use stone c=#aaa596 body=1.3 ta=0.2 tb=0.2
+s 1205,1452 1219,1451 w=5
+s 1182,1466 1198,1465 w=6 c=#9c9788
+s 1151,1484 1169,1483 w=7
+s 1112,1504 1132,1503 w=8 c=#b3ad9c
+s 1067,1526 1089,1525 w=9
+s 1018,1550 1042,1549 w=10 c=#9c9788
+s 967,1576 993,1575 w=11
+s 914,1602 942,1601 w=12 c=#b3ad9c
+s 861,1628 891,1627 w=13
+s 810,1652 842,1651 w=14 c=#9c9788
+s 761,1674 795,1673 w=15
+s 716,1694 752,1693 w=16 c=#aaa596
+unmask
+
+# ---- the slope ----
+pal tuft #86904c
+pal tuftB #9a9a56
+pal tuftC #7a8848
+pal thatch #56603a
+pal heather #7d6470
+pal heatherB #8f7078
+brush tuss w=5 o=1 f=0 k=0 body=0.6 soft=1.1 hair=1.3 even=0.5 vary=0.12 wob=0.6 ta=0.15 tb=0.15
+
+only @land
+mask @cmark
+## Rock comes through the turf here and there. It was here before the turf, so it gets the thickest paint of all.
+use stone body=1.7 hair=1.6 even=0.92 ta=0.2 tb=0.2 wob=0.8
+s 852,1550 858,1546 866,1545 872,1549 w=6.5 c=s2
+s 853,1555 862,1553 872,1554 w=5 c=s3
+s 950,1692 958,1686 970,1685 979,1690 w=10 c=s4
+s 951,1699 964,1697 979,1698 w=7 c=s3
+s 940,1697 950,1698 w=6 c=s1
+s 1100,1697 1108,1690 1120,1689 1128,1694 w=9 c=s2
+s 1102,1703 1116,1701 1128,1702 w=7 c=s5
+s 1128,1699 1137,1701 w=5 c=s6
+s 1310,1565 1317,1560 1326,1560 1332,1564 w=7 c=s6
+s 1311,1570 1322,1569 1332,1570 w=5 c=s3
+s 1460,1505 1466,1501 1474,1501 1479,1504 w=6 c=s2
+s 1461,1509 1470,1508 1479,1509 w=4 c=s3
+s 1200,1599 1206,1595 1214,1595 1219,1598 w=6 c=s1
+s 1201,1603 1210,1602 1219,1603 w=4 c=s5
+s 778,1768 787,1760 801,1759 811,1765 w=11 c=s2
+s 780,1777 795,1774 812,1776 w=8 c=s3
+s 766,1773 778,1775 w=7 c=s6
+s 792,1756 803,1754 w=5 c=s4
+s 1395,1768 1405,1759 1420,1758 1431,1764 w=12 c=s4
+s 1397,1777 1413,1774 1432,1776 w=9 c=s5
+s 1432,1770 1446,1773 w=7 c=s1
+s 1516,1652 1524,1646 1535,1646 1542,1650 w=9 c=s2
+s 1517,1658 1530,1656 1543,1658 w=6 c=s3
+s 667,1603 673,1600 681,1602 w=5 c=s1
+s 668,1607 681,1606 w=3.4 c=s3
+## Three big ones at my feet. One of them has a letter left out of it: the hand moved, so the hand is bare canvas too.
+s 988,1900 1002,1887 1024,1885 1042,1894 w=18 c=s2
+s 990,1915 1014,1910 1044,1913 w=13 c=s3
+s 968,1906 988,1910 w=11 c=s6
+s 1044,1902 1062,1907 w=9 c=s1
+s 1016,1890 1012,1904 w=2 c=s5
+s 1272,1938 1288,1924 1312,1922 1330,1932 w=19 c=s4
+s 1274,1954 1300,1949 1332,1952 w=14 c=s5
+s 1252,1946 1272,1950 w=11 c=s1
+s 1296,1918 1316,1916 w=8 c=s2
+s 1470,1920 1486,1910 1512,1908 1530,1916 w=16 c=s1
+s 1470,1932 1500,1930 1532,1931 w=26 c=s2
+s 1474,1950 1502,1948 1532,1950 w=10 c=s3
+s 1452,1936 1470,1940 w=10 c=s6
+set c=#b9a85a w=5 body=0.6 ta=0.3 tb=0.3 even=0.6
+s 1004,1887 1010,1886
+s 1030,1890 1035,1889
+s 1294,1925 1301,1924
+s 792,1761 797,1760
+s 1408,1760 1413,1759
+s 960,1687 964,1686
+set c=#cfc9b4 w=4.4
+s 1312,1930 1318,1929
+s 1016,1912 1022,1911
+s 1422,1764 1426,1763
+s 1114,1691 1118,1690
+
+## Heather, in three patches. It is stiff and does not give to the wind.
+use tuss w=5 c=heather c2=heatherB body=0.6
+s 884,1604 892,1600 900,1604
+s 900,1612 908,1608 916,1612
+s 870,1616 878,1612 886,1616
+s 916,1600 923,1597 930,1600
+s 892,1624 900,1620 908,1624
+s 926,1616 934,1612 942,1616
+s 860,1604 867,1601 874,1604
+s 908,1592 914,1589 920,1592
+use tuss w=7 c=heather c2=heatherB body=0.6
+s 1352,1690 1362,1685 1372,1690
+s 1374,1700 1384,1695 1394,1700
+s 1334,1704 1344,1699 1354,1704
+s 1360,1714 1370,1709 1380,1714
+s 1392,1684 1401,1680 1410,1684
+s 1320,1688 1329,1684 1338,1688
+s 1384,1722 1394,1717 1404,1722
+s 1344,1676 1352,1672 1360,1676
+s 1406,1708 1415,1704 1424,1708
+use tuss w=9 c=heather c2=heatherB body=0.6
+s 1066,1946 1079,1940 1092,1946
+s 1094,1958 1107,1952 1120,1958
+s 1040,1962 1053,1956 1066,1962
+s 1120,1940 1132,1935 1144,1940
+s 1072,1974 1085,1968 1098,1974
+s 1146,1962 1158,1957 1170,1962
+s 1018,1948 1030,1943 1042,1948
+s 1100,1930 1111,1925 1122,1930
+s 1128,1978 1140,1973 1152,1978
+
+## Tussocks. Each one is a clump that has sat in its place for years while its blades blew about; the clump is painted.
+## Small and close together far up the slope, large and apart down here.
+use tuss w=3 c=tuft c2=tuftC
+s 800,1494 804,1492 808,1494
+s 826,1490 830,1488 834,1490
+s 858,1482 862,1480 866,1482
+s 892,1476 896,1474 900,1476
+s 930,1468 934,1466 938,1468
+s 972,1460 976,1458 980,1460
+s 1030,1456 1034,1454 1038,1456
+s 1082,1454 1086,1452 1090,1454
+s 1140,1452 1144,1450 1148,1452
+s 1270,1450 1274,1448 1278,1450
+s 1322,1448 1326,1446 1330,1448
+s 1372,1446 1376,1444 1380,1446
+s 1424,1436 1428,1434 1432,1436
+s 1462,1422 1466,1420 1470,1422
+s 1506,1410 1510,1408 1514,1410
+s 1546,1396 1550,1394 1554,1396
+s 1580,1384 1584,1382 1588,1384
+s 812,1510 816,1508 820,1510 c=tuftB
+s 846,1504 850,1502 854,1504
+s 884,1496 888,1494 892,1496 c=tuftB
+s 918,1490 922,1488 926,1490
+s 956,1482 960,1480 964,1482
+s 996,1474 1000,1472 1004,1474 c=tuftB
+s 1052,1470 1056,1468 1060,1470
+s 1104,1468 1108,1466 1112,1468
+s 1250,1466 1254,1464 1258,1466 c=tuftB
+s 1296,1464 1300,1462 1304,1464
+s 1346,1462 1350,1460 1354,1462
+s 1398,1458 1402,1456 1406,1458 c=tuftB
+s 1444,1448 1448,1446 1452,1448
+s 1490,1434 1494,1432 1498,1434
+s 1534,1420 1538,1418 1542,1420 c=tuftB
+s 1574,1406 1578,1404 1582,1406
+use tuss w=4 c=tuft c2=tuftC
+s 770,1540 776,1537 782,1540
+s 806,1532 812,1529 818,1532 c=tuftB
+s 902,1518 908,1515 914,1518
+s 944,1510 950,1507 956,1510
+s 990,1500 996,1497 1002,1500 c=tuftB
+s 1044,1494 1050,1491 1056,1494
+s 1094,1490 1100,1487 1106,1490
+s 1236,1486 1242,1483 1248,1486
+s 1284,1484 1290,1481 1296,1484 c=tuftB
+s 1340,1484 1346,1481 1352,1484
+s 1396,1482 1402,1479 1408,1482
+s 1500,1464 1506,1461 1512,1464 c=tuftB
+s 1552,1448 1558,1445 1564,1448
+s 1590,1432 1596,1429 1602,1432
+s 742,1566 748,1563 754,1566
+s 790,1560 796,1557 802,1560
+s 922,1540 928,1537 934,1540 c=tuftB
+s 968,1530 974,1527 980,1530
+s 1014,1522 1020,1519 1026,1522
+s 1130,1524 1136,1521 1142,1524
+s 1180,1516 1186,1513 1192,1516 c=tuftB
+s 1260,1512 1266,1509 1272,1512
+s 1362,1512 1368,1509 1374,1512
+s 1416,1506 1422,1503 1428,1506 c=tuftB
+s 1530,1486 1536,1483 1542,1486
+s 1578,1470 1584,1467 1590,1470
+use tuss w=5 c=tuft c2=tuftC
+s 718,1602 726,1598 734,1602
+s 766,1594 774,1590 782,1594 c=tuftB
+s 812,1586 820,1582 828,1586
+s 964,1560 972,1556 980,1560
+s 1090,1556 1098,1552 1106,1556 c=tuftB
+s 1142,1552 1150,1548 1158,1552
+s 1244,1546 1252,1542 1260,1546
+s 1372,1546 1380,1542 1388,1546 c=tuftB
+s 1426,1540 1434,1536 1442,1540
+s 1476,1534 1484,1530 1492,1534
+s 1566,1512 1574,1508 1582,1512 c=tuftB
+s 700,1640 708,1636 716,1640
+s 748,1630 756,1626 764,1630
+s 800,1622 808,1618 816,1622 c=tuftB
+s 956,1612 964,1608 972,1612
+s 1010,1604 1018,1600 1026,1604
+s 1062,1596 1070,1592 1078,1596 c=tuftB
+s 1116,1590 1124,1586 1132,1590
+s 1260,1590 1268,1586 1276,1590
+s 1416,1584 1424,1580 1432,1584 c=tuftB
+s 1468,1578 1476,1574 1484,1578
+s 1574,1560 1582,1556 1590,1560
+use tuss w=6 c=tuft c2=tuftC
+s 676,1690 686,1685 696,1690
+s 736,1664 746,1659 756,1664 c=tuftB
+s 852,1670 862,1665 872,1670
+s 1002,1650 1012,1645 1022,1650
+s 1056,1640 1066,1635 1076,1640 c=tuftB
+s 1150,1638 1160,1633 1170,1638
+s 1206,1632 1216,1627 1226,1632
+s 1270,1640 1280,1635 1290,1640 c=tuftB
+s 1452,1626 1462,1621 1472,1626
+s 1570,1616 1580,1611 1590,1616
+s 690,1736 700,1731 710,1736
+s 740,1722 750,1717 760,1722 c=tuftB
+s 840,1716 850,1711 860,1716
+s 892,1730 902,1725 912,1730
+s 1016,1708 1026,1703 1036,1708 c=tuftB
+s 1158,1696 1168,1691 1178,1696
+s 1222,1684 1232,1679 1242,1684
+s 1284,1700 1294,1695 1304,1700 c=tuftB
+s 1470,1690 1480,1685 1490,1690
+s 1530,1700 1540,1695 1550,1700
+use tuss w=7 c=tuft c2=tuftC
+s 650,1800 662,1794 674,1800
+s 706,1790 718,1784 730,1790 c=tuftB
+s 846,1786 858,1780 870,1786
+s 902,1794 914,1788 926,1794
+s 966,1772 978,1766 990,1772 c=tuftB
+s 1036,1778 1048,1772 1060,1778
+s 1262,1770 1274,1764 1286,1770
+s 1320,1786 1332,1780 1344,1786 c=tuftB
+s 1478,1776 1490,1770 1502,1776
+s 1544,1764 1556,1758 1568,1764
+s 640,1860 652,1854 664,1860 c=tuftB
+s 700,1850 712,1844 724,1850
+s 772,1846 784,1840 796,1846
+s 848,1856 860,1850 872,1856 c=tuftB
+s 914,1846 926,1840 938,1846
+s 1296,1850 1308,1844 1320,1850
+s 1366,1846 1378,1840 1390,1846 c=tuftB
+s 1432,1856 1444,1850 1456,1856
+s 1540,1842 1552,1836 1564,1842
+use tuss w=9 c=tuft c2=tuftC
+s 610,1930 626,1922 642,1930
+s 690,1920 706,1912 722,1920 c=tuftB
+s 770,1928 786,1920 802,1928
+s 852,1940 868,1932 884,1940
+s 906,1960 922,1952 938,1960 c=tuftB
+s 1186,1930 1202,1922 1218,1930
+s 1370,1920 1386,1912 1402,1920
+s 1396,1962 1412,1954 1428,1962 c=tuftB
+s 1556,1900 1572,1892 1588,1900
+s 640,1984 656,1976 672,1984
+s 730,1978 746,1970 762,1978 c=tuftB
+s 824,1990 840,1982 856,1990
+s 1200,1984 1216,1976 1232,1984
+s 1556,1972 1572,1964 1588,1972 c=tuftB
+## Under each clump, last year's dead grass.
+use tuss w=3 c=thatch c2=none body=0.5
+s 678,1694 696,1694
+s 738,1668 756,1668
+s 854,1674 872,1674
+s 1004,1654 1022,1654
+s 1152,1642 1170,1642
+s 1272,1644 1290,1644
+s 692,1740 710,1740
+s 842,1720 860,1720
+s 1018,1712 1036,1712
+s 1224,1688 1242,1688
+s 1472,1694 1490,1694
+use tuss w=4 c=thatch c2=none body=0.5
+s 652,1805 674,1805
+s 708,1795 730,1795
+s 848,1791 870,1791
+s 968,1777 990,1777
+s 1264,1775 1286,1775
+s 1480,1781 1502,1781
+s 642,1865 664,1865
+s 774,1851 796,1851
+s 916,1851 938,1851
+s 1298,1855 1320,1855
+s 1434,1861 1456,1861
+use tuss w=5 c=thatch c2=none body=0.5
+s 612,1936 642,1936
+s 692,1926 722,1926
+s 772,1934 802,1934
+s 854,1946 884,1946
+s 1188,1936 1218,1936
+s 1372,1926 1402,1926
+s 1558,1906 1588,1906
+s 642,1990 672,1990
+s 826,1996 856,1996
+
+## A ring of small mushrooms came up in the night, down to the right: paint about as thin as the boat's.
+## The ring is not closed.
+use tuss w=4.6 c=#e6d5b2 c2=#d8bf94 body=0.3 o=0.95 ta=0.2 tb=0.2
+s 1237,1840 1242,1837 1247,1840
+s 1222,1854 1227,1851 1232,1854
+s 1186,1861 1191,1858 1196,1861 w=5.2
+s 1144,1858 1149,1855 1154,1858
+s 1117,1848 1122,1845 1127,1848 w=4
+s 1118,1833 1122,1830.5 1126,1833 w=3.8
+s 1145,1824 1149,1821.5 1153,1824 w=3.6
+s 1227,1829 1231,1826.5 1235,1829 w=3.8
+s 1205,1857 1208,1855 1211,1857 w=3
+set c=#efe6d2 c2=none w=1.8 ta=0 tb=0
+s 1242,1840 1242,1845
+s 1227,1854 1227,1859
+s 1191,1861 1191,1867
+s 1149,1858 1149,1863
+s 1122,1848 1122,1852
+s 1122,1833 1122,1836.5
+s 1149,1824 1149,1827
+s 1231,1829 1231,1832.5
+s 1208,1857 1208,1860
+unmask
+
+# ---- far off ----
+## Out where the horizon would be, if there were one, a few things stand in nothing: three rocks of the reef, and
+## the top of the mainland, with the harbour the boat came from. No air is painted, so they are as strong as the grass at my feet.
+mask 0,1498.5 760,1498.5 760,1530 0,1530
+use stone body=1.7 hair=1.6 even=0.92 ta=0.25 tb=0.25 wob=0.3
+s 292,1496 308,1495 w=5 c=s5
+s 296,1493.4 304,1493 w=2.5 c=s2
+s 328,1497 336,1496.6 w=3.4 c=s3
+s 266,1497.4 272,1497.2 w=2.6 c=s5
+use tuss c=turfB c2=turfA w=6 body=0.9 even=0.85 hair=1.6 ta=0.3 tb=0.3 wob=0.3
+s 100,1496 126,1492 150,1490 178,1492 208,1496
+s 196,1496 224,1494 250,1496 w=4 c=turfC
+use line c=s2 w=2 body=1.2
+s 134,1497.2 168,1497.2
+set c=#f4f0e6 w=3 body=0.9 ta=0.1 tb=0.1
+s 146,1494 150,1494
+set c=#9a4a34 w=1.6
+s 145.4,1491.8 150.6,1491.8
+unmask
+
+## On the bench a bowl has been left, with tea still in it. It was put down within the hour:
+## the newest still thing on the island, and the thinnest paint in the picture.
+use line c=#d9d2c0 w=3.4 body=0.15 o=0.95 ta=0.15 tb=0.15
+s 1229,1414.4 1234,1414.4
+set c=#7f9a4a w=1.3 ta=0 tb=0
+s 1230,1413.2 1233,1413.2
+</script>
+<script>
+/**
+ * The brush, the canvas, and the light on the paint.
+ *
+ * Nothing here decides where a stroke goes. A stroke arrives with its path, its width, its colour and how much paint
+ * it carries; this file only works out what a bristle brush would leave behind:
+ *
+ *   - the brush is a row of hairs, and each hair carries a different amount of paint, so a stroke that is running out
+ *     breaks up into streaks before it stops;
+ *   - the canvas has a tooth, and a starved hair touches only the high threads;
+ *   - a hair that crosses wet paint picks some of it up;
+ *   - paint has thickness, and at the end the whole surface is lit from the upper left, so ridges show.
+ *
+ * No imports: the same file runs under node (to make the picture) and in a browser (to replay it).
+ */
+
+const TAU = Math.PI * 2;
+
+function rng(seed) {
+  let a = seed | 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashStr(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function hash2(x, y) {
+  let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+
+function vnoise(x, y) {
+  const xi = Math.floor(x);
+  const yi = Math.floor(y);
+  const fx = x - xi;
+  const fy = y - yi;
+  const u = fx * fx * (3 - 2 * fx);
+  const v = fy * fy * (3 - 2 * fy);
+  const a = hash2(xi, yi);
+  const b = hash2(xi + 1, yi);
+  const c = hash2(xi, yi + 1);
+  const d = hash2(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+
+class Canvas {
+  constructor(w, h) {
+    this.w = w;
+    this.h = h;
+    const n = w * h;
+    this.r = new Float32Array(n);
+    this.g = new Float32Array(n);
+    this.b = new Float32Array(n);
+    /** thickness of paint */
+    this.t = new Float32Array(n);
+    /** the weave: 0 in the hollows between threads, 1 on top of them */
+    this.tooth = new Float32Array(n);
+    /** 1 where the canvas is covered (frisket): paint does not reach it */
+    this.mask = new Uint8Array(n);
+    /** how strongly the weave shows where the canvas is bare or thinly painted */
+    this.weave = 0.22;
+    /** how much thick paint shines where the light catches it */
+    this.gloss = 1;
+    for (let y = 0, i = 0; y < h; y++) {
+      for (let x = 0; x < w; x++, i++) {
+        const weave = 0.2 * Math.cos((x * TAU) / 3.7) * Math.cos((y * TAU) / 3.7);
+        const v = 0.5 + weave + 0.5 * (vnoise(x / 2.1, y / 2.1) - 0.5) + 0.25 * (vnoise(x / 9 + 40, y / 9 + 40) - 0.5);
+        this.tooth[i] = v < 0 ? 0 : v > 1 ? 1 : v;
+      }
+    }
+  }
+
+  /** Tone the whole canvas. */
+  ground(c) {
+    this.r.fill(c[0]);
+    this.g.fill(c[1]);
+    this.b.fill(c[2]);
+    this.t.fill(0);
+  }
+
+  /** Cover a polygon (or, with `outside`, everything but the polygon) so that paint cannot reach it. */
+  protect(poly, outside = false) {
+    const { w, h } = this;
+    const inside = outside ? new Uint8Array(w * h) : this.mask;
+    let y0 = Infinity;
+    let y1 = -Infinity;
+    for (const p of poly) {
+      y0 = Math.min(y0, p[1]);
+      y1 = Math.max(y1, p[1]);
+    }
+    y0 = Math.max(0, Math.floor(y0));
+    y1 = Math.min(h - 1, Math.ceil(y1));
+    const xs = [];
+    for (let y = y0; y <= y1; y++) {
+      const yc = y + 0.5;
+      xs.length = 0;
+      for (let k = 0; k < poly.length; k++) {
+        const a = poly[k];
+        const b = poly[(k + 1) % poly.length];
+        if (a[1] <= yc !== b[1] <= yc) xs.push(a[0] + ((yc - a[1]) / (b[1] - a[1])) * (b[0] - a[0]));
+      }
+      xs.sort((p, q) => p - q);
+      for (let k = 0; k + 1 < xs.length; k += 2) {
+        const xa = Math.max(0, Math.round(xs[k]));
+        const xb = Math.min(w, Math.round(xs[k + 1]));
+        for (let x = xa; x < xb; x++) inside[y * w + x] = 1;
+      }
+    }
+    if (outside) for (let i = 0; i < w * h; i++) if (!inside[i]) this.mask[i] = 1;
+  }
+
+  unprotect() {
+    this.mask.fill(0);
+  }
+}
+
+/** The path of a stroke, as points an even step apart, with the pressure at each. */
+function trace(st, ds) {
+  let dense;
+  if (st.arc) {
+    const { cx, cy, r, a0, a1, flip } = st.arc;
+    const len = (Math.abs(a1 - a0) * Math.PI * r) / 180;
+    const m = Math.max(2, Math.ceil(len / 1.5));
+    dense = [];
+    for (let i = 0; i <= m; i++) {
+      const a = ((a0 + ((a1 - a0) * i) / m) * Math.PI) / 180;
+      dense.push([cx - r * Math.sin(a), cy - flip * r * Math.cos(a), 1]);
+    }
+  } else if (st.pts.length === 2) {
+    dense = st.pts.map((p) => [p[0], p[1], p[2] ?? 1]);
+  } else {
+    // a smooth curve through the given points (Catmull-Rom)
+    const P = st.pts.map((p) => [p[0], p[1], p[2] ?? 1]);
+    dense = [];
+    for (let i = 0; i + 1 < P.length; i++) {
+      const p0 = P[Math.max(0, i - 1)];
+      const p1 = P[i];
+      const p2 = P[i + 1];
+      const p3 = P[Math.min(P.length - 1, i + 2)];
+      const m = Math.max(6, Math.ceil(Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) / 2));
+      for (let k = i === 0 ? 0 : 1; k <= m; k++) {
+        const t = k / m;
+        const t2 = t * t;
+        const t3 = t2 * t;
+        const f = (a, b, c, d) => 0.5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3);
+        dense.push([f(p0[0], p1[0], p2[0], p3[0]), f(p0[1], p1[1], p2[1], p3[1]), p1[2] + (p2[2] - p1[2]) * t]);
+      }
+    }
+  }
+  let len = 0;
+  const cum = [0];
+  for (let i = 1; i < dense.length; i++) {
+    len += Math.hypot(dense[i][0] - dense[i - 1][0], dense[i][1] - dense[i - 1][1]);
+    cum.push(len);
+  }
+  const n = Math.max(2, Math.floor(len / ds) + 1);
+  const x = new Float32Array(n);
+  const y = new Float32Array(n);
+  const p = new Float32Array(n);
+  let k = 0;
+  for (let j = 0; j < n; j++) {
+    const s = Math.min(len, j * ds);
+    while (k + 2 < dense.length && cum[k + 1] < s) k++;
+    const span = cum[k + 1] - cum[k];
+    const u = span > 0 ? (s - cum[k]) / span : 0;
+    x[j] = dense[k][0] + (dense[k + 1][0] - dense[k][0]) * u;
+    y[j] = dense[k][1] + (dense[k + 1][1] - dense[k][1]) * u;
+    p[j] = dense[k][2] + (dense[k + 1][2] - dense[k][2]) * u;
+  }
+  // the brush has some spring in it: it never tracks the intended line exactly
+  if (st.wob > 0 && n > 2) {
+    const so = (st.seed % 1000) * 7.31;
+    const amp = st.wob * Math.min(1, len / 60);
+    const ox = new Float32Array(n);
+    const oy = new Float32Array(n);
+    for (let j = 0; j < n; j++) {
+      const a = Math.max(0, j - 1);
+      const b = Math.min(n - 1, j + 1);
+      let tx = x[b] - x[a];
+      let ty = y[b] - y[a];
+      const l = Math.hypot(tx, ty) || 1;
+      tx /= l;
+      ty /= l;
+      const o = amp * ((vnoise((j * ds) / 38 + so, so * 0.37) - 0.5) * 2 + (vnoise((j * ds) / 11 + so * 1.7, 5.1) - 0.5) * 0.5);
+      ox[j] = -ty * o;
+      oy[j] = tx * o;
+    }
+    for (let j = 0; j < n; j++) {
+      x[j] += ox[j];
+      y[j] += oy[j];
+    }
+  }
+  return { x, y, p, n, len };
+}
+
+const ramp = (v) => (v <= 0 ? 0 : v >= 1 ? 1 : v * v * (3 - 2 * v));
+
+/**
+ * Lay one stroke. Returns the rectangle it touched, [x0, y0, x1, y1], or null.
+ *
+ * st: { pts | arc, c, c2, w, o, f, reach, k, body, hair, soft, ta, tb, p, vary, wob, even, seed }
+ */
+function paint(cv, st) {
+  const W = cv.w;
+  const H = cv.h;
+  const soft = Math.max(0.5, st.soft);
+  const baseRad = 1.05 * soft;
+  const ds = Math.max(0.6, baseRad * 0.55);
+  const path = trace(st, ds);
+  if (path.len <= 0) return null;
+  const rand = rng(st.seed);
+  const nb = Math.max(1, Math.round((st.w / (1.5 * Math.max(1, soft * 0.75))) * st.hair));
+
+  const pad = st.w * 0.8 + baseRad * 2 + 4;
+  let x0 = Infinity;
+  let y0 = Infinity;
+  let x1 = -Infinity;
+  let y1 = -Infinity;
+  for (let j = 0; j < path.n; j++) {
+    if (path.x[j] < x0) x0 = path.x[j];
+    if (path.x[j] > x1) x1 = path.x[j];
+    if (path.y[j] < y0) y0 = path.y[j];
+    if (path.y[j] > y1) y1 = path.y[j];
+  }
+  x0 = Math.max(0, Math.floor(x0 - pad));
+  y0 = Math.max(0, Math.floor(y0 - pad));
+  x1 = Math.min(W, Math.ceil(x1 + pad));
+  y1 = Math.min(H, Math.ceil(y1 + pad));
+  const bw = x1 - x0;
+  const bh = y1 - y0;
+  if (bw <= 0 || bh <= 0) return null;
+  const A = new Float32Array(bw * bh);
+  const SW = new Float32Array(bw * bh);
+  const SR = new Float32Array(bw * bh);
+  const SG = new Float32Array(bw * bh);
+  const SB = new Float32Array(bw * bh);
+  const HT = new Float32Array(bw * bh);
+
+  // the hairs
+  const reachBase = st.reach > 0 ? st.reach : st.f > 0 ? st.f * path.len : 0;
+  const off = new Float32Array(nb);
+  const lag = new Float32Array(nb);
+  const reach = new Float32Array(nb);
+  const thick = new Float32Array(nb);
+  const rad = new Float32Array(nb);
+  const cr = new Float32Array(nb);
+  const cg = new Float32Array(nb);
+  const cb = new Float32Array(nb);
+  const amt = new Float32Array(nb);
+  const drift = (st.seed % 977) * 0.713;
+  const mixAt = rand() * 100;
+  for (let i = 0; i < nb; i++) {
+    const u = nb === 1 ? 0 : i / (nb - 1) - 0.5;
+    off[i] = (u + ((rand() - 0.5) * 0.7) / nb) * st.w;
+    lag[i] = (rand() - 0.5) * Math.min(st.w * 0.3, 14);
+    reach[i] = reachBase * (0.5 + 0.65 * rand());
+    thick[i] = 0.4 + 0.6 * rand();
+    thick[i] += (1 - thick[i]) * (st.even || 0) * 0.75;
+    rad[i] = baseRad * (0.8 + 0.45 * rand());
+    amt[i] = 0.68 + 0.32 * rand();
+    amt[i] += (1 - amt[i]) * (st.even || 0);
+    let m = 0;
+    if (st.c2) m = ramp(vnoise(i / Math.max(2, nb / 5) + mixAt, 3.3) * 1.6 - 0.3);
+    const light = 1 + st.vary * (rand() - 0.5) * 2;
+    const c2 = st.c2 || st.c;
+    cr[i] = Math.min(1, (st.c[0] + (c2[0] - st.c[0]) * m) * light * (1 + st.vary * (rand() - 0.5) * 0.5));
+    cg[i] = Math.min(1, (st.c[1] + (c2[1] - st.c[1]) * m) * light * (1 + st.vary * (rand() - 0.5) * 0.5));
+    cb[i] = Math.min(1, (st.c[2] + (c2[2] - st.c[2]) * m) * light * (1 + st.vary * (rand() - 0.5) * 0.5));
+  }
+
+  const taLen = st.ta * path.len;
+  const tbLen = st.tb * path.len;
+  for (let j = 0; j < path.n; j++) {
+    const ja = Math.max(0, j - 1);
+    const jb = Math.min(path.n - 1, j + 1);
+    let tx = path.x[jb] - path.x[ja];
+    let ty = path.y[jb] - path.y[ja];
+    const tl = Math.hypot(tx, ty) || 1;
+    tx /= tl;
+    ty /= tl;
+    const s = j * ds;
+    let env = 1;
+    if (taLen > 0) env *= ramp(s / taLen);
+    if (tbLen > 0) env *= ramp((path.len - s) / tbLen);
+    const press = st.p * path.p[j] * env;
+    if (press <= 0.01) continue;
+    const pc = press > 1 ? 1 : press;
+    const spread = Math.min(1.2, 0.18 + 0.82 * press);
+    for (let i = 0; i < nb; i++) {
+      const rem = reach[i] > 0 ? 1 - s / reach[i] : 1;
+      if (rem <= 0) continue;
+      const wet = rem * 2 > 1 ? 1 : rem * 2;
+      const wander = nb > 1 ? (vnoise(s / 26 + i * 13.7, drift) - 0.5) * 1.7 * soft : 0;
+      const across = off[i] * spread + wander;
+      const qx = path.x[j] - ty * across + tx * lag[i];
+      const qy = path.y[j] + tx * across + ty * lag[i];
+      // crossing wet paint, a hair picks some of it up
+      if (st.k > 0) {
+        const ix = qx | 0;
+        const iy = qy | 0;
+        if (ix >= 0 && iy >= 0 && ix < W && iy < H) {
+          const ci = iy * W + ix;
+          const tt = cv.t[ci];
+          if (tt > 0.03) {
+            const rate = Math.min(0.5, ((st.k * ds) / 30) * Math.min(1, tt / 0.3));
+            cr[i] += (cv.r[ci] - cr[i]) * rate;
+            cg[i] += (cv.g[ci] - cg[i]) * rate;
+            cb[i] += (cv.b[ci] - cb[i]) * rate;
+          }
+        }
+      }
+      const a0 = st.o * pc * amt[i] * (0.25 + 0.75 * wet);
+      const thr = (1 - wet) * 0.8 + (1 - pc) * 0.25;
+      const th = thick[i] * st.body * (0.35 + 0.65 * wet) * pc;
+      const R = rad[i];
+      const inner = R * 0.5;
+      const xa = Math.max(x0, Math.floor(qx - R));
+      const xb = Math.min(x1 - 1, Math.ceil(qx + R));
+      const ya = Math.max(y0, Math.floor(qy - R));
+      const yb = Math.min(y1 - 1, Math.ceil(qy + R));
+      for (let yy = ya; yy <= yb; yy++) {
+        for (let xx = xa; xx <= xb; xx++) {
+          const d = Math.hypot(xx + 0.5 - qx, yy + 0.5 - qy);
+          if (d >= R + 0.5) continue;
+          let a = d <= inner ? a0 : a0 * (1 - (d - inner) / (R + 0.5 - inner));
+          if (thr > 0) a *= ramp((cv.tooth[yy * W + xx] - thr + 0.12) / 0.24);
+          if (a < 0.004) continue;
+          const bi = (yy - y0) * bw + (xx - x0);
+          if (a > A[bi]) A[bi] = a;
+          SW[bi] += a;
+          SR[bi] += a * cr[i];
+          SG[bi] += a * cg[i];
+          SB[bi] += a * cb[i];
+          const hh = (a / (st.o * amt[i])) * th;
+          if (hh > HT[bi]) HT[bi] = hh;
+        }
+      }
+    }
+  }
+
+  for (let yy = 0; yy < bh; yy++) {
+    for (let xx = 0; xx < bw; xx++) {
+      const bi = yy * bw + xx;
+      const a = A[bi];
+      if (a <= 0) continue;
+      const ci = (yy + y0) * W + xx + x0;
+      if (cv.mask[ci]) continue;
+      const w = SW[bi];
+      cv.r[ci] += (SR[bi] / w - cv.r[ci]) * a;
+      cv.g[ci] += (SG[bi] / w - cv.g[ci]) * a;
+      cv.b[ci] += (SB[bi] / w - cv.b[ci]) * a;
+      cv.t[ci] = cv.t[ci] * (1 - 0.55 * a) + HT[bi];
+    }
+  }
+  return [x0, y0, x1, y1];
+}
+
+// the light that falls on the finished surface: from the upper left, a little in front
+const LX = -0.4;
+const LY = -0.5;
+const LZ = 0.768;
+const HL = Math.hypot(LX, LY, LZ + 1);
+const HX = LX / HL;
+const HY = LY / HL;
+const HZ = (LZ + 1) / HL;
+const FLAT = Math.pow(HZ, 40);
+
+/** Turn paint into a picture: colour, shaded by the relief of the paint and of the weave. Writes RGBA bytes. */
+function develop(cv, out, x0 = 0, y0 = 0, x1 = cv.w, y1 = cv.h, relief = 1) {
+  const W = cv.w;
+  const H = cv.h;
+  const t = cv.t;
+  const tooth = cv.tooth;
+  const weave = cv.weave;
+  const hgt = (i) => t[i] * 1.5 + (tooth[i] * weave) / (1 + t[i] * 5);
+  for (let y = y0; y < y1; y++) {
+    const ym = y > 0 ? y - 1 : y;
+    const yp = y < H - 1 ? y + 1 : y;
+    for (let x = x0; x < x1; x++) {
+      const xm = x > 0 ? x - 1 : x;
+      const xp = x < W - 1 ? x + 1 : x;
+      const i = y * W + x;
+      const gx = (hgt(ym * W + xp) + 2 * hgt(y * W + xp) + hgt(yp * W + xp) - hgt(ym * W + xm) - 2 * hgt(y * W + xm) - hgt(yp * W + xm)) / 8;
+      const gy = (hgt(yp * W + xm) + 2 * hgt(yp * W + x) + hgt(yp * W + xp) - hgt(ym * W + xm) - 2 * hgt(ym * W + x) - hgt(ym * W + xp)) / 8;
+      let nx = -gx * relief;
+      let ny = -gy * relief;
+      const nl = Math.hypot(nx, ny, 1);
+      nx /= nl;
+      ny /= nl;
+      const nz = 1 / nl;
+      const diff = (nx * LX + ny * LY + nz * LZ) / LZ;
+      let shade = 0.55 + 0.45 * diff;
+      if (shade < 0.4) shade = 0.4;
+      const sd = nx * HX + ny * HY + nz * HZ;
+      const spec = sd > 0 ? Math.max(0, Math.pow(sd, 40) - FLAT) * 0.55 * cv.gloss * Math.min(1, t[i] * 1.5) : 0;
+      const o = (y * W + x) * 4;
+      out[o] = (cv.r[i] * shade + spec) * 255 + 0.5;
+      out[o + 1] = (cv.g[i] * shade + spec) * 255 + 0.5;
+      out[o + 2] = (cv.b[i] * shade + spec) * 255 + 0.5;
+      out[o + 3] = 255;
+    }
+  }
+}
+
+/**
+ * Reads a painting as it is written down: one line per stroke, in the order the strokes were laid.
+ *
+ *   canvas 1600 2000            size in pixels
+ *   ground #0d1420              tone the whole canvas
+ *   pal amber #f2a03d           name a colour
+ *   brush star w=4 o=0.95 ...   name a way of holding the brush
+ *   use star c=amber            take up a named brush (and change anything about it)
+ *   set w=6 c=#ffffff           change what is in the hand
+ *   pole 760 640 17.9           pin a string at x y; 17.9 pixels to a degree of sky
+ *   sweep 45                    how many degrees the sky turns in the picture
+ *   horizon 1500                where still water would mirror the sky
+ *   mask x,y x,y x,y ...        cover a shape so paint cannot reach it
+ *   only x,y x,y x,y ...        cover everything except a shape
+ *   unmask                      lift all covers
+ *   shape roof x,y x,y x,y ...  name a shape, to cover with later: "mask @roof", "only @roof"
+ *   grid wall 282 95 TL TR BR BL   rule a grid on a four-cornered surface seen at an angle: 282 units across,
+ *                               95 down, corners given clockwise from the top left
+ *   weave 0.5                   how strongly the weave of the bare canvas shows (0.22 unless said)
+ *   gloss 0.4                   how much thick paint shines (1 unless said)
+ *   rule words                  the rule of the painting, in a sentence or two (shown on its page)
+ *   ## words                    a note about what comes next (kept, and shown when the painting is replayed);
+ *                               lines of ## one after another make one note
+ *   # words                     a remark for whoever reads the file (ignored)
+ *
+ * and the strokes themselves:
+ *
+ *   s x,y x,y x,y ...           freehand: a curve through these points (x,y,p gives pressure at a point)
+ *   a cx,cy r a0 a1             with a string pinned at cx,cy: an arc of radius r from angle a0 to a1
+ *   g wall u,v u,v ...          freehand, but with the points read off a ruled grid
+ *   * rho H                     a star's trail: rho degrees from the pole, now at hour angle H, drawn back into the past
+ *   ~ rho H                     the same trail as still water mirrors it
+ *
+ * Any stroke line may end with key=value pairs that hold for that stroke only.
+ *
+ * Keys: c colour, c2 second colour on the same brush, w width, o opacity, f fade (the paint lasts f times the length
+ * of the stroke; 0 = it never runs out), reach (the same, in pixels), k pick-up of wet paint, body thickness,
+ * hair density of hairs, soft size of each hair's mark, ta tb taper at the start and the end (fraction of the length),
+ * p pressure, vary difference between hairs, wob wobble of the hand in pixels, sw sweep for one star,
+ * even how evenly the hairs are loaded (0 = each its own amount, 1 = all full, like a knife).
+ */
+
+
+const DEFAULTS = { c: [1, 1, 1], c2: null, w: 8, o: 1, f: 0, reach: 0, k: 0.15, body: 1, hair: 1, soft: 1, ta: 0.06, tb: 0.1, p: 1, vary: 0.08, wob: 0.7, sw: 0, even: 0 };
+
+function hex(s) {
+  const m = /^#([0-9a-f]{6})$/i.exec(s);
+  if (!m) return null;
+  const v = parseInt(m[1], 16);
+  return [((v >> 16) & 255) / 255, ((v >> 8) & 255) / 255, (v & 255) / 255];
+}
+
+function readScore(text) {
+  const ops = [];
+  const pal = {};
+  const brushes = {};
+  const seen = new Map();
+  let state = { ...DEFAULTS };
+  let pole = { x: 0, y: 0, k: 1 };
+  let sweep = 45;
+  let horizon = 0;
+  let note = '';
+  let size = [800, 600];
+  let strokes = 0;
+  let rule = '';
+  const shapes = {};
+  const grids = {};
+  const lines = text.split(/\r?\n/);
+
+  const colour = (v, where) => {
+    const c = hex(v) || pal[v];
+    if (!c) throw new Error(`line ${where}: no such colour "${v}"`);
+    return c;
+  };
+  const apply = (target, pairs, where) => {
+    for (const pair of pairs) {
+      const eq = pair.indexOf('=');
+      if (eq < 0) throw new Error(`line ${where}: expected key=value, found "${pair}"`);
+      const key = pair.slice(0, eq);
+      const val = pair.slice(eq + 1);
+      if (!(key in DEFAULTS)) throw new Error(`line ${where}: no such key "${key}"`);
+      if (key === 'c') target.c = colour(val, where);
+      else if (key === 'c2') target.c2 = val === 'none' ? null : colour(val, where);
+      else {
+        const n = Number(val);
+        if (!Number.isFinite(n)) throw new Error(`line ${where}: "${pair}" is not a number`);
+        target[key] = n;
+      }
+    }
+  };
+  const point = (tok, where) => {
+    const v = tok.split(',').map(Number);
+    if (v.length < 2 || v.some((n) => !Number.isFinite(n))) throw new Error(`line ${where}: bad point "${tok}"`);
+    return v;
+  };
+
+  lines.forEach((raw, idx) => {
+    const where = idx + 1;
+    const line = raw.trim();
+    if (!line) return;
+    if (line.startsWith('##')) {
+      const words = line.slice(2).trim();
+      const last = ops[ops.length - 1];
+      if (last && last.type === 'note' && last.end === where - 1) {
+        note = `${note} ${words}`;
+        last.note = note;
+        last.end = where;
+      } else {
+        note = words;
+        ops.push({ type: 'note', note, line: where, end: where });
+      }
+      return;
+    }
+    if (line.startsWith('#')) return;
+    const tok = line.split(/\s+/);
+    const head = tok[0];
+    const rest = tok.slice(1);
+    const plain = rest.filter((t) => !t.includes('='));
+    const pairs = rest.filter((t) => t.includes('='));
+    const stroke = (shape) => {
+      const st = { ...state };
+      apply(st, pairs, where);
+      const count = seen.get(line) || 0;
+      seen.set(line, count + 1);
+      ops.push({ type: 'stroke', ...st, ...shape, seed: (hashStr(line) + count * 7919) | 0, note, line: where, n: strokes++ });
+    };
+    switch (head) {
+      case 'canvas':
+        size = [Number(rest[0]), Number(rest[1])];
+        break;
+      case 'ground':
+        ops.push({ type: 'ground', c: colour(rest[0], where), line: where });
+        break;
+      case 'pal':
+        pal[rest[0]] = colour(rest[1], where);
+        break;
+      case 'brush': {
+        const b = { ...DEFAULTS };
+        apply(b, rest.slice(1), where);
+        brushes[rest[0]] = b;
+        break;
+      }
+      case 'use': {
+        if (!brushes[plain[0]]) throw new Error(`line ${where}: no such brush "${plain[0]}"`);
+        const keep = state.c;
+        state = { ...brushes[plain[0]] };
+        if (!rest.slice(1).some((t) => t.startsWith('c=')) && brushes[plain[0]].c === DEFAULTS.c) state.c = keep;
+        apply(state, pairs, where);
+        break;
+      }
+      case 'set':
+        apply(state, pairs, where);
+        break;
+      case 'pole':
+        pole = { x: Number(rest[0]), y: Number(rest[1]), k: Number(rest[2]) };
+        break;
+      case 'sweep':
+        sweep = Number(rest[0]);
+        break;
+      case 'horizon':
+        horizon = Number(rest[0]);
+        break;
+      case 'mask':
+      case 'only':
+        if (rest.length === 1 && rest[0].startsWith('@')) {
+          if (!shapes[rest[0].slice(1)]) throw new Error(`line ${where}: no such shape "${rest[0]}"`);
+          ops.push({ type: 'mask', outside: head === 'only', poly: shapes[rest[0].slice(1)], line: where });
+        } else ops.push({ type: 'mask', outside: head === 'only', poly: rest.map((t) => point(t, where)), line: where });
+        break;
+      case 'shape':
+        shapes[rest[0]] = rest.slice(1).map((t) => point(t, where));
+        break;
+      case 'grid': {
+        const c = rest.slice(3, 7).map((t) => point(t, where));
+        if (c.length !== 4) throw new Error(`line ${where}: a grid needs a width, a height and four corners`);
+        grids[rest[0]] = { w: Number(rest[1]), h: Number(rest[2]), c };
+        break;
+      }
+      case 'g': {
+        const gr = grids[plain[0]];
+        if (!gr) throw new Error(`line ${where}: no such grid "${plain[0]}"`);
+        if (plain.length < 3) throw new Error(`line ${where}: a stroke needs two points`);
+        const [tl, tr, br, bl] = gr.c;
+        stroke({
+          pts: plain.slice(1).map((t) => {
+            const [u, v, p] = point(t, where);
+            const a = u / gr.w;
+            const b = v / gr.h;
+            const tx = tl[0] + (tr[0] - tl[0]) * a;
+            const ty = tl[1] + (tr[1] - tl[1]) * a;
+            const bx = bl[0] + (br[0] - bl[0]) * a;
+            const by = bl[1] + (br[1] - bl[1]) * a;
+            const q = [tx + (bx - tx) * b, ty + (by - ty) * b];
+            if (p !== undefined) q.push(p);
+            return q;
+          }),
+        });
+        break;
+      }
+      case 'gloss':
+        ops.push({ type: 'gloss', v: Number(rest[0]), line: where });
+        break;
+      case 'weave':
+        ops.push({ type: 'weave', v: Number(rest[0]), line: where });
+        break;
+      case 'rule':
+        rule = rest.join(' ');
+        break;
+      case 'unmask':
+        ops.push({ type: 'unmask', line: where });
+        break;
+      case 's':
+        if (plain.length < 2) throw new Error(`line ${where}: a stroke needs two points`);
+        stroke({ pts: plain.map((t) => point(t, where)) });
+        break;
+      case 'a': {
+        const [cx, cy] = point(plain[0], where);
+        stroke({ arc: { cx, cy, r: Number(plain[1]), a0: Number(plain[2]), a1: Number(plain[3]), flip: 1 }, wobDefault: true });
+        break;
+      }
+      case '*':
+      case '~': {
+        const rho = Number(plain[0]);
+        const H = Number(plain[1]);
+        if (!Number.isFinite(rho) || !Number.isFinite(H)) throw new Error(`line ${where}: a star needs "rho H"`);
+        const st = { ...state };
+        apply(st, pairs, where);
+        const sw = st.sw || sweep;
+        const mirrored = head === '~';
+        const count = seen.get(line) || 0;
+        seen.set(line, count + 1);
+        ops.push({
+          type: 'stroke',
+          ...st,
+          arc: { cx: pole.x, cy: mirrored ? 2 * horizon - pole.y : pole.y, r: rho * pole.k, a0: H, a1: H - sw, flip: mirrored ? -1 : 1 },
+          seed: (hashStr(line) + count * 7919) | 0,
+          note,
+          line: where,
+          n: strokes++,
+        });
+        break;
+      }
+      default:
+        throw new Error(`line ${where}: I do not know "${head}"`);
+    }
+  });
+  return { width: size[0], height: size[1], ops, strokes, rule };
+}
+
+
+const score = readScore(document.getElementById('score').textContent);
+const canvas = document.getElementById('c');
+canvas.width = score.width;
+canvas.height = score.height;
+const ctx = canvas.getContext('2d');
+const img = ctx.createImageData(score.width, score.height);
+const cv = new Canvas(score.width, score.height);
+const noteEl = document.getElementById('note');
+const countEl = document.getElementById('count');
+const barEl = document.querySelector('#bar i');
+const playEl = document.getElementById('play');
+const speedEl = document.getElementById('speed');
+const frameEl = document.getElementById('frame');
+
+let at = 0;         // next thing in the score
+let laid = 0;       // strokes on the canvas
+let owed = 0;       // strokes due
+let playing = true;
+let rush = false;
+let last = performance.now();
+
+function say(text) {
+  if (noteEl.textContent === text) return;
+  noteEl.style.opacity = 0;
+  setTimeout(() => { noteEl.textContent = text; noteEl.style.opacity = 1; }, 250);
+}
+
+function tick(now) {
+  const dt = Math.min(0.1, (now - last) / 1000);
+  last = now;
+  if ((playing || rush) && at < score.ops.length) {
+    owed += rush ? 1e9 : dt * 14 * Math.pow(2, Number(speedEl.value));
+    let box = null;
+    const began = performance.now();
+    while (at < score.ops.length && (owed >= 1 || score.ops[at].type !== 'stroke') && performance.now() - began < 40) {
+      const op = score.ops[at++];
+      let hit = null;
+      if (op.type === 'ground') { cv.ground(op.c); hit = [0, 0, cv.w, cv.h]; }
+      else if (op.type === 'mask') cv.protect(op.poly, op.outside);
+      else if (op.type === 'unmask') cv.unprotect();
+      else if (op.type === 'weave') { cv.weave = op.v; hit = [0, 0, cv.w, cv.h]; }
+      else if (op.type === 'gloss') { cv.gloss = op.v; hit = [0, 0, cv.w, cv.h]; }
+      else if (op.type === 'note') say(op.note);
+      else if (op.type === 'stroke') { hit = paint(cv, op); laid++; owed -= 1; }
+      if (hit) box = box ? [Math.min(box[0], hit[0]), Math.min(box[1], hit[1]), Math.max(box[2], hit[2]), Math.max(box[3], hit[3])] : hit;
+    }
+    if (owed > 3 && !rush) owed = 3;
+    if (box) {
+      const x0 = Math.max(0, box[0] - 2), y0 = Math.max(0, box[1] - 2), x1 = Math.min(cv.w, box[2] + 2), y1 = Math.min(cv.h, box[3] + 2);
+      develop(cv, img.data, x0, y0, x1, y1);
+      ctx.putImageData(img, 0, 0, x0, y0, x1 - x0, y1 - y0);
+    }
+    countEl.textContent = 'stroke ' + laid.toLocaleString('en') + ' of ' + score.strokes.toLocaleString('en');
+    barEl.style.width = (100 * laid / score.strokes) + '%';
+    if (at >= score.ops.length) { rush = false; playing = false; playEl.textContent = 'Done'; }
+  }
+  requestAnimationFrame(tick);
+}
+
+function toggle() {
+  if (at >= score.ops.length) return;
+  playing = !playing;
+  playEl.textContent = playing ? 'Pause' : 'Go on';
+}
+playEl.onclick = toggle;
+document.getElementById('end').onclick = () => { rush = true; };
+document.getElementById('again').onclick = () => {
+  at = 0; laid = 0; owed = 0; rush = false; playing = true;
+  cv.unprotect();
+  playEl.textContent = 'Pause';
+};
+window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); toggle(); } });
+// three distances: the whole picture, the paint at its own size, and three times closer than that
+let closeness = 0;
+frameEl.onclick = (e) => {
+  const r = canvas.getBoundingClientRect();
+  const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+  closeness = (closeness + 1) % 3;
+  const scale = closeness === 2 ? 3 : 1;
+  frameEl.classList.toggle('near', closeness > 0);
+  frameEl.classList.toggle('nearest', closeness === 2);
+  canvas.style.width = closeness > 0 ? canvas.width * scale + 'px' : '';
+  if (closeness > 0) { frameEl.scrollLeft = fx * canvas.width * scale - frameEl.clientWidth / 2; frameEl.scrollTop = fy * canvas.height * scale - frameEl.clientHeight / 2; }
+};
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

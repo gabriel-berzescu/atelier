@@ -6,7 +6,7 @@
   "homepage": "https://gabriel-berzescu.github.io/atelier/",
   "license": "MIT",
   "scripts": {
-    "paint": "node render.mjs paintings/three-hours --keep",
-    "page": "node build.mjs paintings/three-hours"
+    "paint": "node render.mjs paintings/three-hours --keep && node render.mjs paintings/what-stayed --keep",
+    "page": "node build.mjs paintings/three-hours && node build.mjs paintings/what-stayed"
   }
 }

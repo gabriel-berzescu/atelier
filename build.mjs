@@ -27,7 +27,8 @@ const home = (() => {
     return '';
   }
 })();
-const about = `A painting by Claude in ${score.strokes.toLocaleString('en')} strokes, each placed by hand. Only what moves is painted. Watch it being painted again from the bare canvas.`;
+const firstSentence = (score.rule.match(/^[^.]*\./) || [''])[0];
+const about = `A painting by Claude in ${score.strokes.toLocaleString('en')} strokes, each placed by hand. ${firstSentence} Watch it being painted again from the bare canvas.`.replace(/\s+/g, ' ');
 const social = home
   ? `<meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
@@ -56,9 +57,10 @@ ${social}
   html, body { margin: 0; height: 100%; background: var(--wall); color: var(--ink); font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif; }
   main { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; height: 100%; }
   #frame { display: flex; align-items: center; justify-content: center; padding: 20px; min-height: 0; overflow: hidden; cursor: zoom-in; }
-  #frame.near { overflow: auto; align-items: flex-start; justify-content: flex-start; cursor: zoom-out; }
+  #frame.near { overflow: auto; align-items: flex-start; justify-content: flex-start; }
+  #frame.nearest { cursor: zoom-out; }
   canvas { display: block; max-width: 100%; max-height: 100%; box-shadow: 0 0 0 1px #000, 0 18px 60px #000; }
-  #frame.near canvas { max-width: none; max-height: none; }
+  #frame.near canvas { max-width: none; max-height: none; flex: none; }
   aside { display: flex; flex-direction: column; gap: 1.1rem; padding: 2.2rem 1.6rem 1.6rem 0.6rem; min-height: 0; }
   h1 { margin: 0; font-weight: normal; font-size: 1.7rem; letter-spacing: 0.02em; }
   .by { margin: 0.3rem 0 0; color: var(--dim); font-size: 0.9rem; }
@@ -92,7 +94,7 @@ ${social}
       <h1>${title}</h1>
       <p class="by">Claude, 2026 &middot; ${score.strokes.toLocaleString('en')} strokes, each placed by hand</p>
     </div>
-    <p class="rule">Only what moves is painted. A stroke is the way something went during the three hours: it starts loaded where the thing is now and runs dry backward into where it has been. What kept still is bare canvas.</p>
+    <p class="rule">${score.rule}</p>
     <p id="note"></p>
     <div>
       <div id="count"></div>
@@ -104,7 +106,7 @@ ${social}
       <button id="again">Again</button>
       <label>slower <input id="speed" type="range" min="-3" max="4" step="0.5" value="0"> faster</label>
     </div>
-    <p class="hint">Click the painting to look at the paint itself. Space pauses.</p>
+    <p class="hint">Click the painting to look at the paint itself, and again to go closer still. Space pauses.</p>
     <p class="hint"><a href="score.txt">Read the score</a> &middot; <a href="${name}.png">the picture alone</a> &middot; <a href="../../index.html">Atelier</a></p>
   </aside>
 </main>
@@ -153,6 +155,8 @@ function tick(now) {
       if (op.type === 'ground') { cv.ground(op.c); hit = [0, 0, cv.w, cv.h]; }
       else if (op.type === 'mask') cv.protect(op.poly, op.outside);
       else if (op.type === 'unmask') cv.unprotect();
+      else if (op.type === 'weave') { cv.weave = op.v; hit = [0, 0, cv.w, cv.h]; }
+      else if (op.type === 'gloss') { cv.gloss = op.v; hit = [0, 0, cv.w, cv.h]; }
       else if (op.type === 'note') say(op.note);
       else if (op.type === 'stroke') { hit = paint(cv, op); laid++; owed -= 1; }
       if (hit) box = box ? [Math.min(box[0], hit[0]), Math.min(box[1], hit[1]), Math.max(box[2], hit[2]), Math.max(box[3], hit[3])] : hit;
@@ -183,11 +187,17 @@ document.getElementById('again').onclick = () => {
   playEl.textContent = 'Pause';
 };
 window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); toggle(); } });
+// three distances: the whole picture, the paint at its own size, and three times closer than that
+let closeness = 0;
 frameEl.onclick = (e) => {
   const r = canvas.getBoundingClientRect();
   const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-  const near = frameEl.classList.toggle('near');
-  if (near) { frameEl.scrollLeft = fx * canvas.width - frameEl.clientWidth / 2; frameEl.scrollTop = fy * canvas.height - frameEl.clientHeight / 2; }
+  closeness = (closeness + 1) % 3;
+  const scale = closeness === 2 ? 3 : 1;
+  frameEl.classList.toggle('near', closeness > 0);
+  frameEl.classList.toggle('nearest', closeness === 2);
+  canvas.style.width = closeness > 0 ? canvas.width * scale + 'px' : '';
+  if (closeness > 0) { frameEl.scrollLeft = fx * canvas.width * scale - frameEl.clientWidth / 2; frameEl.scrollTop = fy * canvas.height * scale - frameEl.clientHeight / 2; }
 };
 requestAnimationFrame(tick);
 </script>

@@ -16,10 +16,11 @@
   :root { color-scheme: dark; --wall: #070708; --ink: #cfc8b8; --dim: #7d7668; --line: #24221f; --lamp: #f2a03d; }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--wall); color: var(--ink); font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif; }
-  main { max-width: 46rem; margin: 0 auto; padding: 3.5rem 16px 4rem; }
+  main { max-width: 72rem; margin: 0 auto; padding: 3.5rem 16px 4rem; }
   header { margin-bottom: 3rem; }
   h1 { margin: 0; font-weight: normal; font-size: 1.9rem; letter-spacing: 0.02em; }
-  header p { margin: 0.6rem 0 0; color: var(--dim); line-height: 1.55; max-width: 34rem; }
+  header p { margin: 0.6rem 0 0; color: var(--dim); line-height: 1.55; max-width: 36rem; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem 2.5rem; align-items: start; }
   figure { margin: 0; }
   figure a.picture { display: block; }
   img { display: block; width: 100%; height: auto; box-shadow: 0 0 0 1px #000, 0 18px 60px #000; }
@@ -28,10 +29,12 @@
   figcaption .what { color: var(--dim); font-size: 0.92rem; }
   .watch { display: inline-block; margin-top: 1.1rem; color: var(--ink); border: 1px solid var(--line); padding: 0.45rem 0.9rem; border-radius: 2px; text-decoration: none; font-size: 0.95rem; }
   .watch:hover { border-color: var(--lamp); }
-  .rule { margin: 1.6rem 0 0; color: var(--dim); line-height: 1.6; border-left: 2px solid var(--line); padding-left: 0.9rem; max-width: 36rem; }
-  footer { margin-top: 4rem; color: var(--dim); font-size: 0.85rem; }
+  .rule { margin: 1.4rem 0 0; color: var(--dim); line-height: 1.6; border-left: 2px solid var(--line); padding-left: 0.9rem; }
+  .both { margin: 3.5rem 0 0; color: var(--dim); line-height: 1.6; max-width: 40rem; }
+  footer { margin-top: 3.5rem; color: var(--dim); font-size: 0.85rem; }
   a { color: var(--dim); text-underline-offset: 3px; }
   a:hover { color: var(--ink); }
+  @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -40,15 +43,27 @@
     <h1>Atelier</h1>
     <p>A place where Claude paints. Each painting is written down one stroke per line, and every line is placed by hand.</p>
   </header>
-  <figure>
-    <a class="picture" href="paintings/three-hours/index.html"><img src="paintings/three-hours/three-hours-small.png" width="800" height="1000" alt="A night sky of star trails turning about the Pole Star, over a dark house with one lit window whose light rakes down a slope toward a glowing tide line"></a>
-    <figcaption>
-      <span class="name">Three Hours</span>
-      <span class="what">2026 &middot; 1,176 strokes</span>
-    </figcaption>
-    <p class="rule">Only what moves is painted. A stroke is the way something went during the three hours: it starts loaded where the thing is now and runs dry backward into where it has been. What kept still is bare canvas.</p>
-    <a class="watch" href="paintings/three-hours/index.html">Watch it being painted</a>
-  </figure>
+  <div class="pair">
+    <figure>
+      <a class="picture" href="paintings/three-hours/index.html"><img src="paintings/three-hours/three-hours-small.png" width="800" height="1000" alt="A night sky of star trails turning about the Pole Star, over a dark house with one lit window whose light rakes down a slope toward a glowing tide line"></a>
+      <figcaption>
+        <span class="name">Three Hours</span>
+        <span class="what">2026 &middot; 1,176 strokes</span>
+      </figcaption>
+      <p class="rule">Only what moves is painted. A stroke is the way something went during the three hours: it starts loaded where the thing is now and runs dry backward into where it has been. What kept still is bare canvas.</p>
+      <a class="watch" href="paintings/three-hours/index.html">Watch it being painted</a>
+    </figure>
+    <figure>
+      <a class="picture" href="paintings/what-stayed/index.html"><img src="paintings/what-stayed/what-stayed-small.png" width="800" height="1000" alt="The same house by day, painted stone by stone on a green headland with a boat drawn up on the shingle; sea and sky are bare canvas, and two flying birds are bird-shaped gaps in the slate roof"></a>
+      <figcaption>
+        <span class="name">What Stayed</span>
+        <span class="what">2026 &middot; 1,006 strokes</span>
+      </figcaption>
+      <p class="rule">Only what stayed still is painted. A stroke here is a thing, put down once and left: one stone, one slate, one tussock. The longer a thing has stood where it is, the thicker its paint. Everything that moved is bare canvas: the sea, the sky, the birds.</p>
+      <a class="watch" href="paintings/what-stayed/index.html">Watch it being painted</a>
+    </figure>
+  </div>
+  <p class="both">The two are one hill and one house seen from one place, by opposite rules: at night and low water, then by day and high water. The jackdaws get no paint in either. In the first they are asleep on the chimney, and kept still. In the second they are crossing the roof.</p>
   <footer>
     <a href="https://github.com/gabriel-berzescu/atelier">The brush and the scores</a> &middot; the island is <a href="https://gabriel-berzescu.github.io/ebb/">Ebb</a>
   </footer>

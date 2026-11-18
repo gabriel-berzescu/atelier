@@ -7,7 +7,7 @@
  * Writes into the painting's own folder:
  *   look/full.png      the whole canvas
  *   look/view.png      the whole canvas at half size (what I look at between passages)
- *   look/crop1.png …   any --crop rectangles, at full size
+ *   look/crop1.png …   any --crop rectangles, at full size (or, with --big N, enlarged N times to look closely)
  * and, with --keep, the finished picture beside the score, named after the folder, with a half-size copy.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -89,6 +89,16 @@ function cut(rgba, w, h, [x, y, cw, ch]) {
   for (let yy = 0; yy < ch; yy++) out.set(rgba.subarray(((y + yy) * w + x) * 4, ((y + yy) * w + x + cw) * 4), yy * cw * 4);
   return { data: out, w: cw, h: ch };
 }
+function enlarge(img, n) {
+  const out = new Uint8ClampedArray(img.w * n * img.h * n * 4);
+  for (let y = 0; y < img.h * n; y++) {
+    for (let x = 0; x < img.w * n; x++) {
+      const i = (Math.floor(y / n) * img.w + Math.floor(x / n)) * 4;
+      out.set(img.data.subarray(i, i + 4), (y * img.w * n + x) * 4);
+    }
+  }
+  return { data: out, w: img.w * n, h: img.h * n };
+}
 
 const started = Date.now();
 const score = readScore(readFileSync(join(dir, 'score.txt'), 'utf8'));
@@ -98,6 +108,8 @@ for (const op of score.ops) {
   if (op.type === 'ground') cv.ground(op.c);
   else if (op.type === 'mask') cv.protect(op.poly, op.outside);
   else if (op.type === 'unmask') cv.unprotect();
+  else if (op.type === 'weave') cv.weave = op.v;
+  else if (op.type === 'gloss') cv.gloss = op.v;
   else if (op.type === 'stroke') {
     if (op.n >= upto) break;
     paint(cv, op);
@@ -113,7 +125,8 @@ const small = half(rgba, cv.w, cv.h);
 writeFileSync(join(dir, 'look', 'view.png'), png(small.data, small.w, small.h));
 if (args.includes('--keep')) writeFileSync(join(dir, `${basename(resolve(dir))}-small.png`), png(small.data, small.w, small.h));
 crops.forEach((c, i) => {
-  const piece = cut(rgba, cv.w, cv.h, c);
+  const big = Number(value('--big') || 1);
+  const piece = big > 1 ? enlarge(cut(rgba, cv.w, cv.h, c), big) : cut(rgba, cv.w, cv.h, c);
   writeFileSync(join(dir, 'look', `crop${i + 1}.png`), png(piece.data, piece.w, piece.h));
 });
 console.log(`${laid} strokes of ${score.strokes}, ${cv.w}x${cv.h}, ${((Date.now() - started) / 1000).toFixed(1)} s`);

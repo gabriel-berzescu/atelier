@@ -3,8 +3,10 @@
 A place where Claude paints.
 
 On 2026-11-18 Gabriel proposed it: paint something, every brushstroke by hand, as many strokes as you like, in any
-style, or in one invented from the concept up. This repository is the brush that was made for that, and the first
-painting.
+style, or in one invented from the concept up. This repository is the brush that was made for that, and the paintings
+made with it so far: two, which are a pair.
+
+**See them: https://gabriel-berzescu.github.io/atelier/**
 
 ## Three Hours
 
@@ -65,6 +67,61 @@ Go to https://gabriel-berzescu.github.io/atelier/paintings/three-hours/ , or ope
 and needs no server). It starts from the bare canvas and lays the strokes again in the order they were laid, with the note written
 before each passage shown beside it. Click the painting to see the paint at full size.
 
+## What Stayed
+
+![What Stayed](paintings/what-stayed/what-stayed.png)
+
+The same hill and the same house, from the same place on the slope, by day and at high water. 1,006 strokes. It was
+painted the night after "Three Hours", as its other half, by the opposite rule.
+
+**Watch it being painted: https://gabriel-berzescu.github.io/atelier/paintings/what-stayed/**
+
+**The rule.** Only what stayed still is painted. A stroke here is not the way something went. It is a thing, put down
+once where it is and left: one stone, one slate, one tussock. The longer a thing has stood where it is, the thicker
+its paint: rock thickest, then the house, then the turf; thin for the boat that came in this morning and the mushrooms
+that came up in the night; thinnest for a bowl of tea put down within the hour. Everything that moved is bare canvas,
+and this time the canvas is toned the colour of daylight.
+
+What follows from the rule:
+
+- **There is no horizon.** Sea and sky both moved, so both are bare, and nothing divides them. Three rocks of the
+  reef and the top of the mainland stand out in it at the height where the horizon would be.
+- **There are no cast shadows.** The sun moved.
+- **Far things are as strong in colour as near ones.** The air moved too.
+- **The jackdaws again get no paint.** In "Three Hours" they are asleep on the chimney and are bare canvas because
+  they kept still. Here they are awake and crossing the roof, and are bare canvas because they moved: two bird-shaped
+  gaps in the slates.
+- **The flame of the lamp** on the window sill is bare. The lamp is painted.
+- **The mark of the hand** is a letter left out of a rock in the corner. The hand moved.
+
+The house is built the way it is built: 90 stones in the long wall, 88 in the gable, 171 slates on the roof, one
+stroke each.
+
+Things to look for. Through the window, on the back wall of the room: a shelf, and on it a shell, a book with a deep
+blue cover, and a feather (on the painting's page, click twice to go close enough). On the bench, a bowl with tea in
+it. A boat drawn up on the shingle, with nobody near it: in "Three Hours" something was crossing the water toward the
+island with a light, and was not there yet. A ring of mushrooms in the grass, not quite closed. Far to the left, the
+mainland harbour, in the same place on the canvas as the small warm light in the night picture.
+
+The rule has old relatives. Ink painters in China and Japan left water, mist and sky as bare paper. And the first
+photograph with a person in it, Daguerre's view of the Boulevard du Temple in 1838, shows a busy street as an empty
+one: the exposure was so long that everyone who moved left no trace, and the only figure is a man who stood still to
+have his boots cleaned.
+
+### How it went
+
+It was painted in passages with a look after each, like the first one, and more of it went wrong the first time:
+
+- the ground was first laid in level bands and looked knitted; it was taken off and laid again in long strokes down
+  the fall of the slope;
+- the rocks first came out as bars, like bales; they were redone as lumps;
+- the bank of shingle was first one long drag of the brush and read as a road; it was relaid in patches;
+- a pass of turf meant to close gaps was painted over the boat's bow, and had to be moved to before the boat.
+
+Tools besides the brush: paper masks, and a grid ruled on the wall, the gable and the roof so that courses of stone
+and rows of slate keep to the perspective. The points of those strokes are read off the grid; which stone goes where,
+how long it is and what colour, is typed stone by stone.
+
 ## The brush
 
 [`brush.mjs`](brush.mjs) is small and knows nothing about pictures. Given a path, a width, a colour and an amount of
@@ -75,12 +132,15 @@ paint, it works out what a bristle brush would leave:
 - a hair crossing wet paint picks some of it up;
 - paint has thickness, and the finished surface is lit from the upper left, so ridges catch the light.
 
+A brush can also be loaded evenly, like a knife, which is how the stones and slates of the second painting were laid.
+
 [`score.mjs`](score.mjs) reads a score; its first comment describes the whole notation.
 
 ```
 node render.mjs paintings/three-hours --keep     # paint the score; writes look/view.png, and the finished picture
 node render.mjs paintings/three-hours --crop 760,1150,800,800   # also cut a piece out at full size, to look closely
 node build.mjs paintings/three-hours             # make the page that repaints it
+node render.mjs paintings/what-stayed --crop 1110,1350,84,64 --big 8    # the window, eight times enlarged
 ```
 
 Node 20 or later, and nothing else: no packages are installed.
@@ -89,8 +149,10 @@ Node 20 or later, and nothing else: no packages are installed.
 
 ## Checked, and not
 
-- The page was opened in Chrome, left to paint to the end, and its canvas compared with the picture `render.mjs`
-  makes: identical, pixel for pixel.
+- Each painting's page was opened in Chrome, left to paint to the end, and its canvas compared with the picture
+  `render.mjs` makes: identical, pixel for pixel, for both.
+- After the brush was extended for the second painting, the first was painted again and compared: unchanged, byte
+  for byte.
 - Colour was judged on the rendered picture only. How it looks on Gabriel's screen, or printed, has not been seen.
 
 ## Who made it

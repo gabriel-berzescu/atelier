@@ -68,6 +68,10 @@ export class Canvas {
     this.tooth = new Float32Array(n);
     /** 1 where the canvas is covered (frisket): paint does not reach it */
     this.mask = new Uint8Array(n);
+    /** how strongly the weave shows where the canvas is bare or thinly painted */
+    this.weave = 0.22;
+    /** how much thick paint shines where the light catches it */
+    this.gloss = 1;
     for (let y = 0, i = 0; y < h; y++) {
       for (let x = 0; x < w; x++, i++) {
         const weave = 0.2 * Math.cos((x * TAU) / 3.7) * Math.cos((y * TAU) / 3.7);
@@ -205,7 +209,7 @@ const ramp = (v) => (v <= 0 ? 0 : v >= 1 ? 1 : v * v * (3 - 2 * v));
 /**
  * Lay one stroke. Returns the rectangle it touched, [x0, y0, x1, y1], or null.
  *
- * st: { pts | arc, c, c2, w, o, f, reach, k, body, hair, soft, ta, tb, p, vary, wob, seed }
+ * st: { pts | arc, c, c2, w, o, f, reach, k, body, hair, soft, ta, tb, p, vary, wob, even, seed }
  */
 export function paint(cv, st) {
   const W = cv.w;
@@ -262,8 +266,10 @@ export function paint(cv, st) {
     lag[i] = (rand() - 0.5) * Math.min(st.w * 0.3, 14);
     reach[i] = reachBase * (0.5 + 0.65 * rand());
     thick[i] = 0.4 + 0.6 * rand();
+    thick[i] += (1 - thick[i]) * (st.even || 0) * 0.75;
     rad[i] = baseRad * (0.8 + 0.45 * rand());
     amt[i] = 0.68 + 0.32 * rand();
+    amt[i] += (1 - amt[i]) * (st.even || 0);
     let m = 0;
     if (st.c2) m = ramp(vnoise(i / Math.max(2, nb / 5) + mixAt, 3.3) * 1.6 - 0.3);
     const light = 1 + st.vary * (rand() - 0.5) * 2;
@@ -376,7 +382,8 @@ export function develop(cv, out, x0 = 0, y0 = 0, x1 = cv.w, y1 = cv.h, relief = 
   const H = cv.h;
   const t = cv.t;
   const tooth = cv.tooth;
-  const hgt = (i) => t[i] * 1.5 + (tooth[i] * 0.22) / (1 + t[i] * 5);
+  const weave = cv.weave;
+  const hgt = (i) => t[i] * 1.5 + (tooth[i] * weave) / (1 + t[i] * 5);
   for (let y = y0; y < y1; y++) {
     const ym = y > 0 ? y - 1 : y;
     const yp = y < H - 1 ? y + 1 : y;
@@ -396,7 +403,7 @@ export function develop(cv, out, x0 = 0, y0 = 0, x1 = cv.w, y1 = cv.h, relief = 
       let shade = 0.55 + 0.45 * diff;
       if (shade < 0.4) shade = 0.4;
       const sd = nx * HX + ny * HY + nz * HZ;
-      const spec = sd > 0 ? Math.max(0, Math.pow(sd, 40) - FLAT) * 0.55 * Math.min(1, t[i] * 1.5) : 0;
+      const spec = sd > 0 ? Math.max(0, Math.pow(sd, 40) - FLAT) * 0.55 * cv.gloss * Math.min(1, t[i] * 1.5) : 0;
       const o = (y * W + x) * 4;
       out[o] = (cv.r[i] * shade + spec) * 255 + 0.5;
       out[o + 1] = (cv.g[i] * shade + spec) * 255 + 0.5;

@@ -13,6 +13,7 @@
 
 canvas 1600 2000
 ground #0b0a0d
+rule Only what moves is painted. A stroke is the way something went during the three hours: it starts loaded where the thing is now and runs dry backward into where it has been. What kept still is bare canvas.
 
 pole 760 640 17.9
 sweep 45
