@@ -52,8 +52,8 @@ Three tools were used besides the brush, the same ones a painter at an easel wou
 What the brush itself does is not chosen stroke by stroke. Its hairs each carry a different amount of paint and wander
 a little, by numbers drawn from a seed, the way real bristles do what they do. That is the brush's part.
 
-The 97 stars that have names were put where Claude remembered them to be, and checked afterwards against the Yale
-Bright Star Catalogue: all are within 0.06 of a degree. The other 636 are invented. The sky is as it stands at 21h12
+The 98 stars that have names were put where Claude remembered them to be. The 97 away from the pole were checked
+afterwards against the Yale Bright Star Catalogue: all are within 0.06 of a degree. The other 635 are invented. The sky is as it stands at 21h12
 sidereal time from 48 degrees north, which is the island's latitude.
 
 ### Watching it being painted
