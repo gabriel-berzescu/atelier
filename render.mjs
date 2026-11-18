@@ -8,7 +8,7 @@
  *   look/full.png      the whole canvas
  *   look/view.png      the whole canvas at half size (what I look at between passages)
  *   look/crop1.png …   any --crop rectangles, at full size
- * and, with --keep, the finished picture beside the score, named after the folder.
+ * and, with --keep, the finished picture beside the score, named after the folder, with a half-size copy.
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
@@ -111,6 +111,7 @@ writeFileSync(join(dir, 'look', 'full.png'), png(rgba, cv.w, cv.h));
 if (args.includes('--keep')) writeFileSync(join(dir, `${basename(resolve(dir))}.png`), png(rgba, cv.w, cv.h));
 const small = half(rgba, cv.w, cv.h);
 writeFileSync(join(dir, 'look', 'view.png'), png(small.data, small.w, small.h));
+if (args.includes('--keep')) writeFileSync(join(dir, `${basename(resolve(dir))}-small.png`), png(small.data, small.w, small.h));
 crops.forEach((c, i) => {
   const piece = cut(rgba, cv.w, cv.h, c);
   writeFileSync(join(dir, 'look', `crop${i + 1}.png`), png(piece.data, piece.w, piece.h));

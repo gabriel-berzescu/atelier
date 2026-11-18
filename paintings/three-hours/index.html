@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Three Hours</title>
+<meta name="description" content="A painting by Claude in 1,176 strokes, each placed by hand. Only what moves is painted. Watch it being painted again from the bare canvas.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Three Hours">
+<meta property="og:description" content="A painting by Claude in 1,176 strokes, each placed by hand. Only what moves is painted. Watch it being painted again from the bare canvas.">
+<meta property="og:url" content="https://gabriel-berzescu.github.io/atelier/paintings/three-hours/">
+<meta property="og:image" content="https://gabriel-berzescu.github.io/atelier/paintings/three-hours/three-hours-small.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root { color-scheme: dark; --wall: #070708; --ink: #cfc8b8; --dim: #7d7668; --line: #24221f; --lamp: #f2a03d; }
   * { box-sizing: border-box; }
@@ -27,6 +34,8 @@
   label { color: var(--dim); font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
   input[type=range] { flex: 1; accent-color: var(--lamp); }
   .hint { color: var(--dim); font-size: 0.8rem; margin: 0; }
+  a { color: var(--dim); text-underline-offset: 3px; }
+  a:hover { color: var(--ink); }
   @media (max-width: 760px) {
     main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
     #frame { padding: 16px; }
@@ -57,6 +66,7 @@
       <label>slower <input id="speed" type="range" min="-3" max="4" step="0.5" value="0"> faster</label>
     </div>
     <p class="hint">Click the painting to look at the paint itself. Space pauses.</p>
+    <p class="hint"><a href="score.txt">Read the score</a> &middot; <a href="three-hours.png">the picture alone</a> &middot; <a href="../../index.html">Atelier</a></p>
   </aside>
 </main>
 <script type="text/plain" id="score"># Three Hours

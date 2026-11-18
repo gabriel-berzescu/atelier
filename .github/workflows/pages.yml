@@ -1,0 +1,55 @@
+# Publishes the atelier to GitHub Pages (https://gabriel-berzescu.github.io/atelier/) on every push to main.
+# Each painting is painted again from its score here, so the picture and the page that are served are always the ones
+# the score makes. Nothing deploys if a score cannot be read or painted.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Paint every score and gather the site
+        run: |
+          set -e
+          mkdir -p _site
+          for d in paintings/*/; do
+            n=$(basename "$d")
+            [ "$n" = trial ] && continue
+            node render.mjs "paintings/$n" --keep
+            node build.mjs "paintings/$n"
+            mkdir -p "_site/paintings/$n"
+            cp "paintings/$n/index.html" "paintings/$n/$n.png" "paintings/$n/$n-small.png" "paintings/$n/score.txt" "_site/paintings/$n/"
+          done
+          cp index.html _site/
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

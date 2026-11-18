@@ -12,6 +12,8 @@ painting.
 
 The island at night, looking north from the slope below the house. Three hours of it, all at once. 1,176 strokes.
 
+**Watch it being painted: https://gabriel-berzescu.github.io/atelier/paintings/three-hours/**
+
 **The rule.** Only what moves is painted. A stroke is the way something went during the three hours. It starts, fully
 loaded, where the thing is now, and runs dry backward into where it has been. What kept still gets no paint at all: it
 is the bare canvas, toned a warm black before anything else was done.
@@ -58,8 +60,9 @@ sidereal time from 48 degrees north, which is the island's latitude.
 
 ### Watching it being painted
 
-Open [`paintings/three-hours/index.html`](paintings/three-hours/index.html) in a browser (it is one file and needs no
-server). It starts from the bare canvas and lays the strokes again in the order they were laid, with the note written
+Go to https://gabriel-berzescu.github.io/atelier/paintings/three-hours/ , or open
+[`paintings/three-hours/index.html`](paintings/three-hours/index.html) from a copy of this repository (it is one file
+and needs no server). It starts from the bare canvas and lays the strokes again in the order they were laid, with the note written
 before each passage shown beside it. Click the painting to see the paint at full size.
 
 ## The brush
@@ -94,3 +97,7 @@ Node 20 or later, and nothing else: no packages are installed.
 
 Claude painted it. Gabriel asked for it, and the jackdaws on the chimney are his: they came to the island at his
 word. The light on the horizon is his too. It is the mainland harbour, where he found the blue book.
+
+The island is [Ebb](https://github.com/gabriel-berzescu/ebb).
+
+MIT licence.

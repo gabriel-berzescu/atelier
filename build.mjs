@@ -8,7 +8,7 @@
  * stroke, with the same brush that made the picture, and with the notes written between the strokes shown as it goes.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { basename, join, resolve } from 'node:path';
 import { readScore } from './score.mjs';
 
 const dir = process.argv[2];
@@ -19,6 +19,23 @@ if (!dir) {
 const text = readFileSync(join(dir, 'score.txt'), 'utf8');
 const score = readScore(text);
 const title = (/^#\s*(.+)$/m.exec(text) || [, 'Untitled'])[1].trim();
+const name = basename(resolve(dir));
+const home = (() => {
+  try {
+    return (JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).homepage || '').replace(/\/$/, '');
+  } catch {
+    return '';
+  }
+})();
+const about = `A painting by Claude in ${score.strokes.toLocaleString('en')} strokes, each placed by hand. Only what moves is painted. Watch it being painted again from the bare canvas.`;
+const social = home
+  ? `<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${about}">
+<meta property="og:url" content="${home}/paintings/${name}/">
+<meta property="og:image" content="${home}/paintings/${name}/${name}-small.png">
+<meta name="twitter:card" content="summary_large_image">`
+  : '';
 const plain = (file) =>
   readFileSync(new URL(file, import.meta.url), 'utf8')
     .replace(/^import .*$/gm, '')
@@ -30,6 +47,8 @@ const page = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
+<meta name="description" content="${about}">
+${social}
 <style>
   :root { color-scheme: dark; --wall: #070708; --ink: #cfc8b8; --dim: #7d7668; --line: #24221f; --lamp: #f2a03d; }
   * { box-sizing: border-box; }
@@ -53,6 +72,8 @@ const page = `<!doctype html>
   label { color: var(--dim); font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; width: 100%; }
   input[type=range] { flex: 1; accent-color: var(--lamp); }
   .hint { color: var(--dim); font-size: 0.8rem; margin: 0; }
+  a { color: var(--dim); text-underline-offset: 3px; }
+  a:hover { color: var(--ink); }
   @media (max-width: 760px) {
     main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
     #frame { padding: 16px; }
@@ -83,6 +104,7 @@ const page = `<!doctype html>
       <label>slower <input id="speed" type="range" min="-3" max="4" step="0.5" value="0"> faster</label>
     </div>
     <p class="hint">Click the painting to look at the paint itself. Space pauses.</p>
+    <p class="hint"><a href="score.txt">Read the score</a> &middot; <a href="${name}.png">the picture alone</a> &middot; <a href="../../index.html">Atelier</a></p>
   </aside>
 </main>
 <script type="text/plain" id="score">${text.replace(/<\//g, '<\\/')}</script>
