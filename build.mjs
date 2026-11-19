@@ -157,6 +157,7 @@ function tick(now) {
       else if (op.type === 'unmask') cv.unprotect();
       else if (op.type === 'weave') { cv.weave = op.v; hit = [0, 0, cv.w, cv.h]; }
       else if (op.type === 'gloss') { cv.gloss = op.v; hit = [0, 0, cv.w, cv.h]; }
+      else if (op.type === 'reserve') cv.reserve(op.poly);
       else if (op.type === 'note') say(op.note);
       else if (op.type === 'stroke') { hit = paint(cv, op); laid++; owed -= 1; }
       if (hit) box = box ? [Math.min(box[0], hit[0]), Math.min(box[1], hit[1]), Math.max(box[2], hit[2]), Math.max(box[3], hit[3])] : hit;
@@ -184,6 +185,9 @@ document.getElementById('end').onclick = () => { rush = true; };
 document.getElementById('again').onclick = () => {
   at = 0; laid = 0; owed = 0; rush = false; playing = true;
   cv.unprotect();
+  cv.held.fill(0);
+  cv.weave = 0.22;
+  cv.gloss = 1;
   playEl.textContent = 'Pause';
 };
 window.addEventListener('keydown', (e) => { if (e.code === 'Space') { e.preventDefault(); toggle(); } });

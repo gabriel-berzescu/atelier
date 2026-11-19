@@ -110,6 +110,7 @@ for (const op of score.ops) {
   else if (op.type === 'unmask') cv.unprotect();
   else if (op.type === 'weave') cv.weave = op.v;
   else if (op.type === 'gloss') cv.gloss = op.v;
+  else if (op.type === 'reserve') cv.reserve(op.poly);
   else if (op.type === 'stroke') {
     if (op.n >= upto) break;
     paint(cv, op);

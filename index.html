@@ -16,11 +16,11 @@
   :root { color-scheme: dark; --wall: #070708; --ink: #cfc8b8; --dim: #7d7668; --line: #24221f; --lamp: #f2a03d; }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--wall); color: var(--ink); font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif; }
-  main { max-width: 72rem; margin: 0 auto; padding: 3.5rem 16px 4rem; }
+  main { max-width: 96rem; margin: 0 auto; padding: 3.5rem 16px 4rem; }
   header { margin-bottom: 3rem; }
   h1 { margin: 0; font-weight: normal; font-size: 1.9rem; letter-spacing: 0.02em; }
   header p { margin: 0.6rem 0 0; color: var(--dim); line-height: 1.55; max-width: 36rem; }
-  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem 2.5rem; align-items: start; }
+  .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3rem 2rem; align-items: start; }
   figure { margin: 0; }
   figure a.picture { display: block; }
   img { display: block; width: 100%; height: auto; box-shadow: 0 0 0 1px #000, 0 18px 60px #000; }
@@ -30,11 +30,12 @@
   .watch { display: inline-block; margin-top: 1.1rem; color: var(--ink); border: 1px solid var(--line); padding: 0.45rem 0.9rem; border-radius: 2px; text-decoration: none; font-size: 0.95rem; }
   .watch:hover { border-color: var(--lamp); }
   .rule { margin: 1.4rem 0 0; color: var(--dim); line-height: 1.6; border-left: 2px solid var(--line); padding-left: 0.9rem; }
-  .both { margin: 3.5rem 0 0; color: var(--dim); line-height: 1.6; max-width: 40rem; }
+  .all { margin: 3.5rem 0 0; color: var(--dim); line-height: 1.6; max-width: 44rem; }
+  .all + .all { margin-top: 1rem; }
   footer { margin-top: 3.5rem; color: var(--dim); font-size: 0.85rem; }
   a { color: var(--dim); text-underline-offset: 3px; }
   a:hover { color: var(--ink); }
-  @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
+  @media (max-width: 1000px) { .three { grid-template-columns: 1fr; max-width: 40rem; } }
 </style>
 </head>
 <body>
@@ -43,7 +44,16 @@
     <h1>Atelier</h1>
     <p>A place where Claude paints. Each painting is written down one stroke per line, and every line is placed by hand.</p>
   </header>
-  <div class="pair">
+  <div class="three">
+    <figure>
+      <a class="picture" href="paintings/half-way/index.html"><img src="paintings/half-way/half-way-small.png" width="800" height="1000" alt="Seen from a rowing boat at night: the stern with a lantern, a blue book and a shell on the seat, two bare hands on the oars, the boat's glowing track and rings of oar strokes leading back to a small harbour of lights on the horizon, under star trails"></a>
+      <figcaption>
+        <span class="name">Half Way</span>
+        <span class="what">2026 &middot; 759 strokes</span>
+      </figcaption>
+      <p class="rule">From the boat, the boat is the one thing that keeps still, and everything else goes by. So both rules hold, each in its place: what goes by is painted as the way it went, and the boat is painted as a thing, plank by plank. The one who rows is neither, and is bare canvas.</p>
+      <a class="watch" href="paintings/half-way/index.html">Watch it being painted</a>
+    </figure>
     <figure>
       <a class="picture" href="paintings/three-hours/index.html"><img src="paintings/three-hours/three-hours-small.png" width="800" height="1000" alt="A night sky of star trails turning about the Pole Star, over a dark house with one lit window whose light rakes down a slope toward a glowing tide line"></a>
       <figcaption>
@@ -63,7 +73,8 @@
       <a class="watch" href="paintings/what-stayed/index.html">Watch it being painted</a>
     </figure>
   </div>
-  <p class="both">The two are one hill and one house seen from one place, by opposite rules: at night and low water, then by day and high water. The jackdaws get no paint in either. In the first they are asleep on the chimney, and kept still. In the second they are crossing the roof.</p>
+  <p class="all">They hang here in the order things happened. A boat leaves the mainland harbour at night with a lantern, a book and a shell. From the island, over three hours, its light is a thin line on the horizon that has not arrived. By the next day the boat is drawn up on the shingle, and the book and the shell are on a shelf.</p>
+  <p class="all">They were painted in another order: the night on the island first, then the day, each by the opposite rule; then the crossing, which needed both. The canvases are toned to match: black for the first, the colour of daylight for the second, half way between for the third. What is left bare is, in turn, what kept still, what moved, and the one who looks.</p>
   <footer>
     <a href="https://github.com/gabriel-berzescu/atelier">The brush and the scores</a> &middot; the island is <a href="https://gabriel-berzescu.github.io/ebb/">Ebb</a>
   </footer>

@@ -4,7 +4,7 @@ A place where Claude paints.
 
 On 2026-11-18 Gabriel proposed it: paint something, every brushstroke by hand, as many strokes as you like, in any
 style, or in one invented from the concept up. This repository is the brush that was made for that, and the paintings
-made with it so far: two, which are a pair.
+made with it so far: three, which belong together.
 
 **See them: https://gabriel-berzescu.github.io/atelier/**
 
@@ -122,6 +122,59 @@ Tools besides the brush: paper masks, and a grid ruled on the wall, the gable an
 and rows of slate keep to the perspective. The points of those strokes are read off the grid; which stone goes where,
 how long it is and what colour, is typed stone by stone.
 
+## Half Way
+
+![Half Way](paintings/half-way/half-way.png)
+
+On 2026-11-19 Gabriel asked what the harbour looks like from the boat, while it is moving, "maybe from about half
+way". This is that: the boat which in "Three Hours" is a thin line of light on the horizon, seen from inside it.
+759 strokes.
+
+**Watch it being painted: https://gabriel-berzescu.github.io/atelier/paintings/half-way/**
+
+Whoever rows sits with their back to where they are going. So this is the view for the whole crossing: the harbour
+that was left, straight ahead of the eyes; the island behind, unseen.
+
+**The rule** comes from the other two. From the boat, the boat is the one thing that keeps still, and everything else
+goes by. So both rules hold here, each in its place:
+
+- **What goes by is painted as the way it went**, loaded where it is now and running dry into where it has been.
+  The stars. The harbour: it does not move, but from the boat it draws together, so each of its lights is a stroke
+  coming in from where that light used to stand, with a red one and a green one at the harbour mouth. The track of
+  the boat, back to the harbour, which is not straight because nobody rows straight with their back to the bow.
+  And the pulls of the oars: each leaves a ring in the water either side of the track where the blades came out, and
+  the small lights that live in that water flare in it. Rowing is counted in strokes, and so is painting; thirty
+  pulls are painted, the newest at the edges of the canvas and the oldest almost at the harbour.
+- **The boat is painted as a thing**, board by board, as the house is in "What Stayed": three boards to the transom,
+  five to the stern seat, three planks to each side. On the seat stands the lantern, which is the light "Three
+  Hours" sees from the island; beside it lie a book with a deep blue cover and, on the book, a shell. They are on
+  their way to a shelf.
+- **The one who rows is neither**, and is bare canvas: two hands on the oars, set aside before the first stroke was
+  laid. The canvas is toned half way between the black of the first painting and the daylight of the second.
+
+The time is an hour and a half into the three hours of the first painting. So each star's trail here is the older
+half of that star's trail there, and the Plough, which in "Three Hours" has swung down to the left, here still stands
+over the harbour. The Pole Star is up in the right-hand corner.
+
+### What is copied, what is new, what is not exact
+
+- **The stars are not placed again.** The score of "Three Hours" has 775 lines that each lay a star, written by hand
+  for that painting. They are copied into this score unchanged, and the sky is turned back an hour and a half and
+  looked at in true perspective from the water, facing 34 degrees west of north, which is where the harbour light
+  stands in "Three Hours". 345 of them fall in this picture's sky. The rest are outside it and are not counted.
+- **The left of the sky is new.** "Three Hours" does not show it. Seven stars there are real ones from the Herdsman
+  and Berenice's Hair, placed from memory and checked afterwards against the Yale catalogue (all within 0.03 of a
+  degree). Eighty are invented, each put where it is on the canvas, with the sky working out how it came to be
+  there.
+- **The eye is higher than a rower's.** A sitting rower's eyes are well under a metre above the water, and the
+  sea would be a thinner band than it is here. The water was given more room.
+- **The reflections of the stars were tried and taken off.** They crossed the track like scratches. The open sea
+  would not hold them anyway.
+
+Other things that were done twice: the two newest rings of oar-water first looked like a pair of eyes and were redone
+as whirls; the track of the boat first looked like a road, with the rings for its markings, and was bent and broken
+up; the oars first came out as pale ghosts and were repainted as ash with a dark line under them.
+
 ## The brush
 
 [`brush.mjs`](brush.mjs) is small and knows nothing about pictures. Given a path, a width, a colour and an amount of
@@ -150,9 +203,9 @@ Node 20 or later, and nothing else: no packages are installed.
 ## Checked, and not
 
 - Each painting's page was opened in Chrome, left to paint to the end, and its canvas compared with the picture
-  `render.mjs` makes: identical, pixel for pixel, for both.
-- After the brush was extended for the second painting, the first was painted again and compared: unchanged, byte
-  for byte.
+  `render.mjs` makes: identical, pixel for pixel, for all three.
+- Each time the brush was extended for a new painting, the earlier ones were painted again and compared: unchanged,
+  byte for byte.
 - Colour was judged on the rendered picture only. How it looks on Gabriel's screen, or printed, has not been seen.
 
 ## Who made it

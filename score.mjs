@@ -10,9 +10,14 @@
  *   pole 760 640 17.9           pin a string at x y; 17.9 pixels to a degree of sky
  *   sweep 45                    how many degrees the sky turns in the picture
  *   horizon 1500                where still water would mirror the sky
+ *   eye -34 800 800 1180 48     look at the sky in true perspective instead: facing 34 degrees west of north,
+ *                               800 pixels of focal length, the horizon at y 1180 and its middle at x 800,
+ *                               from 48 degrees north. Star trails are then drawn as they would be seen.
+ *   turn -22.5                  turn the whole sky by so many degrees of hour angle before drawing a star
  *   mask x,y x,y x,y ...        cover a shape so paint cannot reach it
  *   only x,y x,y x,y ...        cover everything except a shape
  *   unmask                      lift all covers
+ *   reserve @hand               keep a shape bare for the whole painting; lifting the covers does not uncover it
  *   shape roof x,y x,y x,y ...  name a shape, to cover with later: "mask @roof", "only @roof"
  *   grid wall 282 95 TL TR BR BL   rule a grid on a four-cornered surface seen at an angle: 282 units across,
  *                               95 down, corners given clockwise from the top left
@@ -30,6 +35,7 @@
  *   g wall u,v u,v ...          freehand, but with the points read off a ruled grid
  *   * rho H                     a star's trail: rho degrees from the pole, now at hour angle H, drawn back into the past
  *   ~ rho H                     the same trail as still water mirrors it
+ *   + x,y                       a star's trail, for a star that is now at this place on the canvas (needs an eye)
  *
  * Any stroke line may end with key=value pairs that hold for that stroke only.
  *
@@ -59,6 +65,8 @@ export function readScore(text) {
   let pole = { x: 0, y: 0, k: 1 };
   let sweep = 45;
   let horizon = 0;
+  let eye = null;
+  let turn = 0;
   let note = '';
   let size = [800, 600];
   let strokes = 0;
@@ -92,6 +100,49 @@ export function readScore(text) {
     const v = tok.split(',').map(Number);
     if (v.length < 2 || v.some((n) => !Number.isFinite(n))) throw new Error(`line ${where}: bad point "${tok}"`);
     return v;
+  };
+
+  const RAD = Math.PI / 180;
+  /** The place on the canvas of a star rho degrees from the pole at hour angle H (west positive), or null if it is behind the eye. */
+  const skyPoint = (rho, H) => {
+    const dec = (90 - rho) * RAD;
+    const lat = eye.lat * RAD;
+    const h = H * RAD;
+    const up = Math.sin(dec) * Math.sin(lat) + Math.cos(dec) * Math.cos(lat) * Math.cos(h);
+    const north = Math.sin(dec) * Math.cos(lat) - Math.cos(dec) * Math.sin(lat) * Math.cos(h);
+    const east = -Math.cos(dec) * Math.sin(h);
+    const az = eye.az * RAD;
+    const ahead = north * Math.cos(az) + east * Math.sin(az);
+    if (ahead < 0.12) return null;
+    const right = east * Math.cos(az) - north * Math.sin(az);
+    return [eye.cx + (eye.f * right) / ahead, eye.hy - (eye.f * up) / ahead];
+  };
+  /** The star that is at a place on the canvas: [rho, H]. */
+  const skyStar = (x, y) => {
+    const right = (x - eye.cx) / eye.f;
+    const up = (eye.hy - y) / eye.f;
+    const len = Math.hypot(right, up, 1);
+    const az = eye.az * RAD;
+    const lat = eye.lat * RAD;
+    const north = (Math.cos(az) - right * Math.sin(az)) / len;
+    const east = (Math.sin(az) + right * Math.cos(az)) / len;
+    const u = up / len;
+    const dec = Math.asin(u * Math.sin(lat) + north * Math.cos(lat));
+    const H = Math.atan2(-east, u * Math.cos(lat) - north * Math.sin(lat));
+    return [90 - dec / RAD, H / RAD];
+  };
+  /** A star's trail as the eye sees it: from where it is now, back through `sw` degrees of turning. */
+  const skyTrail = (rho, H, sw, mirrored) => {
+    const steps = Math.max(4, Math.ceil(sw / 0.4));
+    const pts = [];
+    for (let i = 0; i <= steps; i++) {
+      const p = skyPoint(rho, H - (sw * i) / steps);
+      if (!p) break;
+      if (Math.abs(p[0]) > 6000 || Math.abs(p[1]) > 6000) break;
+      pts.push(mirrored ? [p[0], 2 * eye.hy - p[1]] : p);
+    }
+    const seen = (p) => p[0] > -20 && p[0] < size[0] + 20 && p[1] > -20 && p[1] < size[1] + 20 && (mirrored ? p[1] > eye.hy : p[1] < eye.hy);
+    return pts.some(seen) ? pts : [];
   };
 
   lines.forEach((raw, idx) => {
@@ -229,10 +280,16 @@ export function readScore(text) {
         const mirrored = head === '~';
         const count = seen.get(line) || 0;
         seen.set(line, count + 1);
+        let shape;
+        if (eye) {
+          const pts = skyTrail(rho, H + turn, sw, mirrored);
+          if (pts.length < 2) break;
+          shape = { pts };
+        } else shape = { arc: { cx: pole.x, cy: mirrored ? 2 * horizon - pole.y : pole.y, r: rho * pole.k, a0: H, a1: H - sw, flip: mirrored ? -1 : 1 } };
         ops.push({
           type: 'stroke',
           ...st,
-          arc: { cx: pole.x, cy: mirrored ? 2 * horizon - pole.y : pole.y, r: rho * pole.k, a0: H, a1: H - sw, flip: mirrored ? -1 : 1 },
+          ...shape,
           seed: (hashStr(line) + count * 7919) | 0,
           note,
           line: where,
@@ -240,6 +297,31 @@ export function readScore(text) {
         });
         break;
       }
+      case '+': {
+        if (!eye) throw new Error(`line ${where}: "+" needs an eye`);
+        const [x, y] = point(plain[0], where);
+        const st = { ...state };
+        apply(st, pairs, where);
+        const [rho, H] = skyStar(x, y);
+        const pts = skyTrail(rho, H, st.sw || sweep, false);
+        if (pts.length < 2) break;
+        const count = seen.get(line) || 0;
+        seen.set(line, count + 1);
+        ops.push({ type: 'stroke', ...st, pts, seed: (hashStr(line) + count * 7919) | 0, note, line: where, n: strokes++ });
+        break;
+      }
+      case 'eye':
+        eye = { az: Number(rest[0]), f: Number(rest[1]), cx: Number(rest[2]), hy: Number(rest[3]), lat: Number(rest[4] ?? 48) };
+        break;
+      case 'turn':
+        turn = Number(rest[0]);
+        break;
+      case 'reserve':
+        if (rest.length === 1 && rest[0].startsWith('@')) {
+          if (!shapes[rest[0].slice(1)]) throw new Error(`line ${where}: no such shape "${rest[0]}"`);
+          ops.push({ type: 'reserve', poly: shapes[rest[0].slice(1)], line: where });
+        } else ops.push({ type: 'reserve', poly: rest.map((t) => point(t, where)), line: where });
+        break;
       default:
         throw new Error(`line ${where}: I do not know "${head}"`);
     }

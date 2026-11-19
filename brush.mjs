@@ -68,6 +68,8 @@ export class Canvas {
     this.tooth = new Float32Array(n);
     /** 1 where the canvas is covered (frisket): paint does not reach it */
     this.mask = new Uint8Array(n);
+    /** 1 where the canvas is to stay bare to the end: lifting the masks does not uncover it */
+    this.held = new Uint8Array(n);
     /** how strongly the weave shows where the canvas is bare or thinly painted */
     this.weave = 0.22;
     /** how much thick paint shines where the light catches it */
@@ -118,6 +120,14 @@ export class Canvas {
       }
     }
     if (outside) for (let i = 0; i < w * h; i++) if (!inside[i]) this.mask[i] = 1;
+  }
+
+  /** Keep a polygon bare for the whole painting. */
+  reserve(poly) {
+    const masks = this.mask;
+    this.mask = this.held;
+    this.protect(poly, false);
+    this.mask = masks;
   }
 
   unprotect() {
@@ -355,7 +365,7 @@ export function paint(cv, st) {
       const a = A[bi];
       if (a <= 0) continue;
       const ci = (yy + y0) * W + xx + x0;
-      if (cv.mask[ci]) continue;
+      if (cv.mask[ci] || cv.held[ci]) continue;
       const w = SW[bi];
       cv.r[ci] += (SR[bi] / w - cv.r[ci]) * a;
       cv.g[ci] += (SG[bi] / w - cv.g[ci]) * a;
